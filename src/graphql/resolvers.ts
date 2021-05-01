@@ -18,6 +18,10 @@ const resolvers = {
 		comments: CommentController.getPostComments,
 	},
 
+	Comment: {
+		profile: ProfileController.getProfileById,
+	},
+
 	Query: {
 		getUserById: UserController.getUserById,
 		getProfileById: ProfileController.getProfileById,
