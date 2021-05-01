@@ -16,9 +16,17 @@ const typeDefs = gql`
 	}
 
 	type Post {
+		post_id: Int
 		image: String
 		caption: String
 		profile: Profile
+		comments(offset: Int, limit: Int): PaginatedComments
+	}
+
+	type Comment {
+		comment_id: Int
+		profile: Profile
+		text: String
 	}
 
 	type PaginatedPosts {
@@ -33,6 +41,12 @@ const typeDefs = gql`
 		data: [Profile]
 	}
 
+	type PaginatedComments {
+		count: Int
+		hasMore: Boolean
+		data: [Comment]
+	}
+
 	type Query {
 		getUserById(user_id: Int!): User
 		getProfileById(profile_id: Int!): Profile
@@ -42,6 +56,7 @@ const typeDefs = gql`
 
 	type Mutation {
 		createUser(username: String!, password: String!): Profile
+		createComment(post_id: Int!, text: String!): Comment
 		follow(following_id: Int!): Boolean
 	}
 `;

@@ -1,3 +1,4 @@
+import commentService from "../database/comments/comment.service";
 import db from "../database/db";
 import postService from "../database/posts/post.service";
 import profileService from "../database/profiles/profile.service";
@@ -37,6 +38,15 @@ describe("Tet Database Model Services", () => {
 
 		// Return a new profile linked to user
 		return await profileService.createProfile(user);
+	}
+
+	// Utility function to create a new Post
+	async function createTestPost(profile: any) {
+		return postService.createPost(
+			profile.user_id,
+			"mock_image",
+			"not a caption"
+		);
 	}
 
 	describe("User Service", () => {
@@ -235,6 +245,56 @@ describe("Tet Database Model Services", () => {
 			expect(feed.count).toBe(1);
 			expect(feed.hasMore).toBe(false);
 			expect(Array.isArray(feed.data)).toBeTruthy();
+		});
+	});
+
+	describe("Comment Service", () => {
+		test("Create comment", async () => {
+			// Create new post
+			const profile = await createProfile(
+				"create_comment_profile",
+				"test1234"
+			);
+			const post = await createTestPost(profile);
+
+			// Create comment
+			const comment = await commentService.createComment({
+				post_id: post.post_id,
+				profile_id: profile.profile_id,
+				text: "Nice post!",
+			});
+
+			// Check if comment_id is valid
+			expect(comment.comment_id).toBeTruthy();
+		});
+
+		test("Get post comments", async () => {
+			// Create new post
+			const profile = await createProfile(
+				"create_comment_profile",
+				"test1234"
+			);
+			const post = await createTestPost(profile);
+
+			// Create comment
+			const comment = await commentService.createComment({
+				post_id: post.post_id,
+				profile_id: profile.profile_id,
+				text: "Nice post!",
+			});
+
+			// Get comment from post
+			const postComments = await commentService.getComments({
+				post_id: post.post_id,
+				offset: 0,
+				limit: 1,
+			});
+
+			// Check pagination meta data
+			expect(postComments.count).toBe(1);
+			expect(postComments.hasMore).toBe(false);
+			// Check if data is an array
+			expect(Array.isArray(postComments.data)).toBeTruthy();
 		});
 	});
 

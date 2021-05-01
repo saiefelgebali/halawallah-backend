@@ -2,6 +2,7 @@ import UserService from "../database/users/user.service";
 import UserController from "../database/users/user.controller";
 import ProfileController from "../database/profiles/profile.controller";
 import PostController from "../database/posts/post.controller";
+import CommentController from "../database/comments/comment.controller";
 
 const resolvers = {
 	Profile: {
@@ -14,6 +15,7 @@ const resolvers = {
 
 	Post: {
 		profile: ProfileController.getProfileById,
+		comments: CommentController.getPostComments,
 	},
 
 	Query: {
@@ -25,6 +27,7 @@ const resolvers = {
 
 	Mutation: {
 		createUser: UserController.createUser,
+		createComment: CommentController.createComment,
 		follow: ProfileController.followProfile,
 	},
 };
