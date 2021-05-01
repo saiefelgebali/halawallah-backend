@@ -1,0 +1,6 @@
+node_modules
+media
+coverage
+lib
+config.ts
+.env
