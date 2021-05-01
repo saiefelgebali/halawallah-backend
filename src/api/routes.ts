@@ -1,6 +1,7 @@
 import { route } from "alamanah-express";
 import { postUpload } from "./upload";
 import PostController from "../database/posts/post.controller";
+import { getImagePath } from "./static";
 
 // Upload post using multer middleware
 const uploadPostRoute = route({
@@ -15,7 +16,7 @@ const getPostImageRoute = route({
 	method: "GET",
 	path: "/media/img/post/:filename",
 	view: (req, res) => {
-		res.sendFile(`${process.cwd()}/media/img/post/${req.params.filename}`);
+		return res.sendFile(getImagePath("post", req.params.filename));
 	},
 });
 
