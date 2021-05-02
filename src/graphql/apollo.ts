@@ -3,27 +3,29 @@ import { Application } from "express";
 import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
 
+export const apolloServer = new ApolloServer({
+	typeDefs,
+	resolvers,
+
+	// Apply authentication context to graphql requests
+	context: ({ req }) => {
+		// @ts-ignore
+		if (req.user_id) {
+			// @ts-ignore
+			const userId = req.user_id;
+			return { userId };
+		}
+	},
+});
+
 export async function connectApolloServer(app: Application) {
 	/**
 	 * Start a new ApolloServer instance and connect it to application
 	 */
-	const server = new ApolloServer({
-		typeDefs,
-		resolvers,
 
-		// Apply authentication context to graphql requests
-		context: ({ req }) => {
-			// @ts-ignore
-			if (req.user_id) {
-				// @ts-ignore
-				const userId = req.user_id;
-				return { userId };
-			}
-		},
-	});
-	await server.start();
+	await apolloServer.start();
 
-	server.applyMiddleware({ app });
+	apolloServer.applyMiddleware({ app });
 
-	return server;
+	return apolloServer;
 }
