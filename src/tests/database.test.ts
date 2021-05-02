@@ -317,7 +317,7 @@ describe("Tet Database Model Services", () => {
 			const post = await createTestPost(profile);
 
 			// Create comment
-			const comment = await commentService.createComment({
+			await commentService.createComment({
 				post_id: post.post_id,
 				profile_id: profile.profile_id,
 				text: "Nice post!",
@@ -335,6 +335,32 @@ describe("Tet Database Model Services", () => {
 			expect(postComments.hasMore).toBe(false);
 			// Check if data is an array
 			expect(Array.isArray(postComments.data)).toBeTruthy();
+		});
+
+		test("Delete comment", async () => {
+			// Create new post
+			const profile = await createProfile(
+				"create_comment_profile",
+				"test1234"
+			);
+			const post = await createTestPost(profile);
+
+			// Create comment
+			const comment = await commentService.createComment({
+				post_id: post.post_id,
+				profile_id: profile.profile_id,
+				text: "Nice post!",
+			});
+
+			// Try to delete
+			await commentService.deleteCommentById(comment.comment_id);
+
+			// Try to retrieve comment
+			const retrieval = await commentService.getCommentById(
+				comment.comment_id
+			);
+
+			expect(retrieval).toBeFalsy();
 		});
 	});
 
