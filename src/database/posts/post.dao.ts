@@ -90,6 +90,21 @@ class PostDAO {
 			data,
 		};
 	}
+
+	async getPostById(post_id: number) {
+		// Get post by post_id
+		return (await db("posts").select("*").where({ post_id }))[0];
+	}
+
+	async deletePostById(post_id: number) {
+		try {
+			// Delete post by post_id
+			await db("posts").delete().where({ post_id });
+			return true;
+		} catch {
+			return false;
+		}
+	}
 }
 
 export default new PostDAO();

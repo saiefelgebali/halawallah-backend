@@ -33,6 +33,7 @@ const resolvers = {
 		createUser: UserController.createUser,
 		createComment: CommentController.createComment,
 		follow: ProfileController.followProfile,
+		deletePost: PostController.deletePostById,
 	},
 };
 

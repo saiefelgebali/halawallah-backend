@@ -246,6 +246,46 @@ describe("Tet Database Model Services", () => {
 			expect(feed.hasMore).toBe(false);
 			expect(Array.isArray(feed.data)).toBeTruthy();
 		});
+
+		test("Get post by id", async () => {
+			// Create new profiles
+			const profile = await createProfile("get_post_profile", "test1234");
+
+			// Have profile create a new post
+			const post = await postService.createPost(
+				profile.user_id,
+				"new_image",
+				"Hello!"
+			);
+
+			// Try to retrieve post
+			const result = await postService.getPostById(post.post_id);
+
+			expect(result.post_id).toBe(post.post_id);
+		});
+
+		test("Delete post by id", async () => {
+			// Create new profiles
+			const profile = await createProfile(
+				"delete_post_profile",
+				"test1234"
+			);
+
+			// Have profile create a new post
+			const post = await postService.createPost(
+				profile.user_id,
+				"new_image",
+				"Hello!"
+			);
+
+			// Try to delete
+			await postService.deletePostById(post.post_id);
+
+			// Try to retrieve post
+			const retrieval = await postService.getPostById(post.post_id);
+
+			expect(retrieval).toBeFalsy();
+		});
 	});
 
 	describe("Comment Service", () => {

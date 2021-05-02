@@ -20,6 +20,14 @@ class PostService {
 	async getProfileFeed(profileId: number, offset: number, limit: number) {
 		return PostDAO.getProfileFeed(profileId, offset, limit);
 	}
+
+	async getPostById(post_id: number) {
+		return PostDAO.getPostById(post_id);
+	}
+
+	async deletePostById(post_id: number) {
+		return PostDAO.deletePostById(post_id);
+	}
 }
 
 export default new PostService();

@@ -58,6 +58,7 @@ const typeDefs = gql`
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		follow(following_id: Int!): Boolean
+		deletePost(post_id: Int!): Boolean
 	}
 `;
 
