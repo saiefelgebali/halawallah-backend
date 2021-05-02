@@ -1,4 +1,3 @@
-import profileService from "./profile.service";
 import ProfileService from "./profile.service";
 
 class ProfileController {
@@ -7,7 +6,7 @@ class ProfileController {
 	 * @returns Queried results
 	 */
 
-	async getProfileById(parent: any, args: any) {
+	async getProfileById(parent: any, args: any, context: any) {
 		// Get profile_id from either args or parent
 		let profile_id;
 
@@ -19,6 +18,13 @@ class ProfileController {
 		// Apply if profile_id is found in parent
 		else if (parent && parent.profile_id) {
 			profile_id = parent.profile_id;
+		}
+
+		// Apply if profile_id is in context
+		else if (context && context.user.id) {
+			profile_id = await ProfileService.getProfileIDFromUserID(
+				context.user.id
+			);
 		}
 
 		return await ProfileService.getProfile(profile_id);
