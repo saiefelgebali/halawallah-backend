@@ -16,6 +16,9 @@ const resolvers = {
 	Post: {
 		profile: ProfileController.getProfileById,
 		comments: CommentController.getPostComments,
+		image: (parent: any, args: any, context: any) => {
+			return `${context.url}/api/media/img/post/${parent.image}`;
+		},
 	},
 
 	Comment: {

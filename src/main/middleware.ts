@@ -1,14 +1,11 @@
 import { ConsoleColor, print } from "alamanah-express";
 import { RequestHandler } from "express";
 import authentication from "../auth/middleware";
+import { getAbsoluteUrl } from "../util/url";
 
 // Log HTTP Requests
 const logger: RequestHandler = (req, res, next) => {
-	print(
-		`${req.protocol}://${req.hostname}${req.url}`,
-		req.method,
-		ConsoleColor.FgBlue
-	);
+	print(getAbsoluteUrl(req), req.method, ConsoleColor.FgBlue);
 	next();
 };
 
