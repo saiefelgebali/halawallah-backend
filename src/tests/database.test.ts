@@ -1,17 +1,10 @@
-import commentService from "../database/comments/comment.service";
 import db from "../database/db";
-import postService from "../database/posts/post.service";
-import profileService from "../database/profiles/profile.service";
-import refreshTokenService from "../database/refresh_tokens/refresh_token.service";
+import { truncate } from "./utils";
 import userService from "../database/users/user.service";
-
-// Truncate tables
-const tables = ["users", "profiles", "posts", "profile_following", "comments"];
-async function truncate() {
-	tables.forEach(async (table) => {
-		await db.raw("TRUNCATE TABLE " + table + " CASCADE");
-	});
-}
+import profileService from "../database/profiles/profile.service";
+import postService from "../database/posts/post.service";
+import commentService from "../database/comments/comment.service";
+import refreshTokenService from "../database/refresh_tokens/refresh_token.service";
 
 describe("Tet Database Model Services", () => {
 	beforeAll(async () => {

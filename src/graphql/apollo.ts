@@ -9,7 +9,7 @@ export const apolloServer = new ApolloServer({
 
 	// Apply authentication context to graphql requests
 	context: ({ req }) => {
-		if (req.user && req.user.id) {
+		if (req && req.user && req.user.id) {
 			return { user: req.user };
 		}
 	},
