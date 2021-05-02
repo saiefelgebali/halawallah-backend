@@ -59,6 +59,7 @@ const typeDefs = gql`
 		createComment(post_id: Int!, text: String!): Comment
 		follow(following_id: Int!): Boolean
 		deletePost(post_id: Int!): Boolean
+		deleteComment(comment_id: Int!): Boolean
 	}
 `;
 

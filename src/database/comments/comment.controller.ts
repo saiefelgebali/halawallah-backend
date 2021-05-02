@@ -37,7 +37,7 @@ class CommentController {
 		});
 	}
 
-	async deleteComment(parent: any, args: any, context: any) {
+	async deleteCommentById(parent: any, args: any, context: any) {
 		// Try to access user from context
 		const user = context.user;
 

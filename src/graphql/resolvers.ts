@@ -34,6 +34,7 @@ const resolvers = {
 		createComment: CommentController.createComment,
 		follow: ProfileController.followProfile,
 		deletePost: PostController.deletePostById,
+		deleteComment: CommentController.deleteCommentById,
 	},
 };
 
