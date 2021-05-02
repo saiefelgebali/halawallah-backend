@@ -15,8 +15,8 @@ class CommentController {
 
 	async createComment(parent: any, args: CreateCommentArgs, context: any) {
 		// Skip unauthorized requests
-		if (!context.userId) {
-			return new ApolloError("Unauthorized requst");
+		if (!context.user) {
+			return new ApolloError("Unauthenticated requst");
 		}
 
 		// Return new comment
