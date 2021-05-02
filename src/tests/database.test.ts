@@ -314,7 +314,7 @@ describe("Tet Database Model Services", () => {
 			expect(refreshToken.user_id).toBe(user.user_id);
 		});
 
-		test("Get user id from token", async () => {
+		test("Get user from token", async () => {
 			// Create a new user
 			const user = await createUser("get_token_user_test", "test1234");
 
@@ -324,13 +324,13 @@ describe("Tet Database Model Services", () => {
 				user.user_id
 			);
 
-			// Get user_id from token
-			const userId = await refreshTokenService.getTokenUserID(
+			// Get user from token
+			const checkUser = await refreshTokenService.getTokenUser(
 				refreshToken.token
 			);
 
 			// Check if user_id is correct
-			expect(userId).toBe(user.user_id);
+			expect(checkUser.user_id).toBe(user.user_id);
 		});
 	});
 

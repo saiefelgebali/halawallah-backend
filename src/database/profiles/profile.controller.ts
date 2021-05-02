@@ -26,13 +26,13 @@ class ProfileController {
 
 	async followProfile(parent: any, args: any, context: any) {
 		// Unauthenticated users return null
-		if (!context.userId) {
+		if (!context.user) {
 			return null;
 		}
 
 		// Get respective profileId
 		const profileId = await ProfileService.getProfileIDFromUserID(
-			context.userId
+			context.user.id
 		);
 
 		// Authenticated user can make a follow
@@ -49,9 +49,9 @@ class ProfileController {
 
 	async getMyProfile(parent: any, args: any, context: any) {
 		// If user is authenticated - return user's profile
-		if (context && context.userId) {
+		if (context.user) {
 			const profle_id = await ProfileService.getProfileIDFromUserID(
-				context.userId
+				context.user.id
 			);
 			return ProfileService.getProfile(profle_id);
 		}

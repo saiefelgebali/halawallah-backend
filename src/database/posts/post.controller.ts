@@ -8,16 +8,16 @@ class PostController {
 	 * @returns Queried results
 	 */
 
-	async createPost(req: Request | any, res: Response) {
+	async createPost(req: Request, res: Response) {
 		// Handle unauthorized users
-		if (!req.user_id) {
+		if (!req.user) {
 			return res.status(403).send("Unauthorized access");
 		}
 
 		// Return new post in json format
 		res.json(
 			await PostService.createPost(
-				req.user_id,
+				req.user.id,
 				req.file.filename,
 				req.body.caption
 			)
@@ -35,16 +35,16 @@ class PostController {
 
 	async getMyFeed(parent: any, args: any, context: any) {
 		// Try to access user_id from context
-		const userId = context.userId;
+		const user = context.user;
 
 		// Unauthenticated request
-		if (!userId) {
+		if (!user) {
 			return null;
 		}
 
 		// Authenticated request
 		// Get relevant profile
-		const profileId = await profileService.getProfileIDFromUserID(userId);
+		const profileId = await profileService.getProfileIDFromUserID(user.id);
 
 		// Return paginated posts response
 		return await PostService.getProfileFeed(

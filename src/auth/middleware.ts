@@ -1,25 +1,55 @@
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-export default function authenticateToken(req: any, res: any, next: any) {
+interface AuthUser {
+	id: number;
+	username: string;
+}
+
+declare global {
+	namespace Express {
+		interface Request {
+			// Extend express requests by adding a user property
+			// User will be determined by auth method
+			user?: AuthUser;
+		}
+	}
+}
+
+export default function authenticateToken(
+	req: Request,
+	res: Response,
+	next: NextFunction
+) {
 	// Extract auth token from request headers
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 
 	// Handle unauthenticated Request
 	if (!token) {
-		req.user_id = null;
+		req.user = undefined;
 		return next();
 	}
 
 	// Handle authenticated Requests
-	jwt.verify(
+	const user = jwt.verify(
 		token,
-		process.env.ACCESS_TOKEN_SECRET || "KEY",
-		// Add relevant user_id to req object if token valid
-		(err: any, result: any) => {
-			req.user_id = err ? null : result.user_id;
-		}
-	);
+		process.env.ACCESS_TOKEN_SECRET || "KEY"
+	) as { user_id: number; username: string };
+
+	// Check if user is authorized
+	// Apply user details to req object
+	if (user && user.user_id) {
+		req.user = {
+			id: user.user_id,
+			username: user.username,
+		};
+	}
+
+	// Unauthenticated user will have undefined req.user object
+	else {
+		req.user = undefined;
+	}
 
 	return next();
 }

@@ -18,6 +18,16 @@ class RefreshTokenDAO {
 			await db("refresh_tokens").select("user_id").where({ token })
 		)[0].user_id;
 	}
+
+	async getTokenUser(token: string) {
+		// Query for user related to specified refresh token
+		return (
+			await db("refresh_tokens")
+				.select("users.user_id", "users.username")
+				.innerJoin("users", "users.user_id", "refresh_tokens.user_id")
+				.where({ token })
+		)[0];
+	}
 }
 
 export default new RefreshTokenDAO();

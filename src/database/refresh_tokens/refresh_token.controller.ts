@@ -20,20 +20,19 @@ class RefreshTokenController {
 			);
 		}
 
-		// Try to get userId from refreshToken
-		const userId = await RefreshTokenService.getTokenUserID(refreshToken);
+		// Try to get user information from refreshToken
+		// user contains - username, user_id
+		const user = await RefreshTokenService.getTokenUser(refreshToken);
 
 		// Handle invalid refresh token
-		if (!userId) {
+		if (!user) {
 			res.statusCode = 400;
 			return res.send("Refresh token is expired");
 		}
 
 		// Token is valid
-		// Send a new access token
-		const accessToken = generateAccessToken(userId);
-
-		res.statusCode = 200;
+		// Send a new access token with user information
+		const accessToken = generateAccessToken(user);
 
 		return res.json({ accessToken });
 	}
