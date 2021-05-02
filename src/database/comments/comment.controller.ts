@@ -1,4 +1,5 @@
 import { ApolloError } from "apollo-server-errors";
+import ProfileService from "../profiles/profile.service";
 import CommentService from "./comment.service";
 
 interface CreateCommentArgs {
@@ -34,6 +35,42 @@ class CommentController {
 			offset: args.offset,
 			limit: args.limit,
 		});
+	}
+
+	async deleteComment(parent: any, args: any, context: any) {
+		// Try to access user from context
+		const user = context.user;
+
+		// Unauthenticated request
+		if (!user) {
+			return new ApolloError("Unauthenticated request");
+		}
+
+		// Get profile details
+		const profile_id = await ProfileService.getProfileIDFromUserID(
+			context.user.id
+		);
+
+		// Get comment by id
+		const comment = await CommentService.getCommentById(args.comment_id);
+
+		// Ensure post exists
+		if (!comment) {
+			return new ApolloError("Comment does not exist");
+		}
+
+		// Ensure context user matches comment profile
+		if (comment.profile_id === profile_id) {
+			const result = await CommentService.deleteCommentById(
+				comment.comment_id
+			);
+			return result;
+		}
+
+		// Handle error
+		else {
+			return new ApolloError("Unauthorized to delete comment");
+		}
 	}
 }
 

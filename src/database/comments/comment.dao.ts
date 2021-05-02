@@ -19,6 +19,20 @@ class CommentDAO {
 		)[0];
 	}
 
+	async getComment(comment_id: number) {
+		return (await db("comments").select("*").where({ comment_id }))[0];
+	}
+
+	async deleteCommentById(comment_id: number) {
+		try {
+			// Delete comment
+			await db("comments").delete().where({ comment_id });
+			return true;
+		} catch {
+			return false;
+		}
+	}
+
 	async getPostComments(post_id: number, offset: number, limit: number) {
 		// Paginated response
 		// Return a post's related comments

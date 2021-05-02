@@ -33,6 +33,14 @@ class CommentService {
 			args.limit
 		);
 	}
+
+	getCommentById(comment_id: number) {
+		return CommentDAO.getComment(comment_id);
+	}
+
+	deleteCommentById(comment_id: number) {
+		return CommentDAO.deleteCommentById(comment_id);
+	}
 }
 
 export default new CommentService();
