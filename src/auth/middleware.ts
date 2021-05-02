@@ -32,10 +32,15 @@ export default function authenticateToken(
 	}
 
 	// Handle authenticated Requests
-	const user = jwt.verify(
-		token,
-		process.env.ACCESS_TOKEN_SECRET || "KEY"
-	) as { user_id: number; username: string };
+	let user: { user_id: number; username: string } | undefined;
+	try {
+		user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "KEY") as {
+			user_id: number;
+			username: string;
+		};
+	} catch {
+		user = undefined;
+	}
 
 	// Check if user is authorized
 	// Apply user details to req object
@@ -46,7 +51,7 @@ export default function authenticateToken(
 		};
 	}
 
-	// Unauthenticated user will have undefined req.user object
+	// Unauthorized user will have undefined req.user object
 	else {
 		req.user = undefined;
 	}

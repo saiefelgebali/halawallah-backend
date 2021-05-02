@@ -7,8 +7,17 @@ class ProfileService {
 	 */
 
 	async getProfileIDFromUserID(user_id: number) {
-		// Return the profile_id attribute of relevant profile object
-		return (await ProfileDAO.getProfileIDFromUserID(user_id)).profile_id;
+		// Try to access profile id
+		const result = await ProfileDAO.getProfileIDFromUserID(user_id);
+
+		// Return the profile_id attribute
+		if (result) {
+			return result.profile_id;
+		}
+		// Return null if undefined
+		else {
+			return null;
+		}
 	}
 
 	createProfile(newUser: any) {
