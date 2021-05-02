@@ -47,6 +47,11 @@ const typeDefs = gql`
 		data: [Comment]
 	}
 
+	type LoginTokens {
+		refreshToken: String
+		accessToken: String
+	}
+
 	type Query {
 		getUserById(user_id: Int!): User
 		getProfileById(profile_id: Int!): Profile
@@ -55,6 +60,7 @@ const typeDefs = gql`
 	}
 
 	type Mutation {
+		login(username: String!, password: String!): LoginTokens
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		follow(following_id: Int!): Boolean

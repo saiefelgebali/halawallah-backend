@@ -9,8 +9,8 @@ class UserController {
 	 * @returns Queried results
 	 */
 
-	async loginUser(req: Request, res: Response) {
-		return res.send(await UserService.loginUser(req.body));
+	async loginUser(parent: any, args: any, context: any) {
+		return await UserService.loginUser(args);
 	}
 
 	async getUserById(parent: any, args: any) {
