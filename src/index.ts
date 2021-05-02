@@ -1,12 +1,9 @@
 import { print, ConsoleColor } from "alamanah-express";
 import app, { settings } from "./main/settings";
 import { connectApolloServer } from "./graphql/apollo";
-import express, { Application } from "express";
+import { Application } from "express";
 
 async function run(app: Application) {
-	// Serve static files
-	app.use(express.static(`${process.cwd()}/media`));
-
 	// Connect graphql server
 	const graphql = await connectApolloServer(app);
 
