@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { processRequestImage } from "../../api/process";
 import profileService from "../profiles/profile.service";
 import PostService from "./post.service";
 
@@ -14,9 +13,6 @@ class PostController {
 		if (!req.user) {
 			return res.status(403).send("Unauthorized access");
 		}
-
-		// Process image
-		await processRequestImage("post", req);
 
 		// Return new post in json format
 		res.json(
