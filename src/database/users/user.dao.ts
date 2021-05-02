@@ -31,7 +31,10 @@ class UserDAO {
 
 			// Generate tokens
 			const refreshToken = await generateRefreshToken(user.user_id);
-			const accessToken = generateAccessToken(user.user_id);
+			const accessToken = generateAccessToken({
+				id: user.user_id,
+				username: user.username,
+			});
 
 			return {
 				refreshToken,

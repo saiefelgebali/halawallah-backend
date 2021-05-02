@@ -32,7 +32,10 @@ class RefreshTokenController {
 
 		// Token is valid
 		// Send a new access token with user information
-		const accessToken = generateAccessToken(user);
+		const accessToken = generateAccessToken({
+			id: user.user_id,
+			username: user.username,
+		});
 
 		return res.json({ accessToken });
 	}

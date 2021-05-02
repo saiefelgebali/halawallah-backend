@@ -32,21 +32,21 @@ export default function authenticateToken(
 	}
 
 	// Handle authenticated Requests
-	let user: { user_id: number; username: string } | undefined;
+	let user: AuthUser | undefined;
 	try {
-		user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "KEY") as {
-			user_id: number;
-			username: string;
-		};
+		user = jwt.verify(
+			token,
+			process.env.ACCESS_TOKEN_SECRET || "KEY"
+		) as AuthUser;
 	} catch {
 		user = undefined;
 	}
 
 	// Check if user is authorized
 	// Apply user details to req object
-	if (user && user.user_id) {
+	if (user && user.id) {
 		req.user = {
-			id: user.user_id,
+			id: user.id,
 			username: user.username,
 		};
 	}
