@@ -5,6 +5,10 @@ class RefreshTokenService {
 		return RefreshTokenDAO.createRefreshToken(token, user_id);
 	}
 
+	deleteRefreshToken(token: string) {
+		return RefreshTokenDAO.deleteRefreshToken(token);
+	}
+
 	getTokenUser(token: string) {
 		return RefreshTokenDAO.getTokenUser(token);
 	}

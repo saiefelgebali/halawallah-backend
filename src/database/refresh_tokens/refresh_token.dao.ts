@@ -12,6 +12,10 @@ class RefreshTokenDAO {
 		)[0];
 	}
 
+	async deleteRefreshToken(token: string) {
+		return await db("refresh_tokens").delete().where({ token });
+	}
+
 	async getTokenUserID(token: string) {
 		// Query for user_id related to specified refresh token
 		return (

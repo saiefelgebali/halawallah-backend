@@ -1,6 +1,7 @@
 import { ApolloError } from "apollo-server-errors";
 import { Request, Response } from "express";
 import ProfileService from "../profiles/profile.service";
+import RefreshTokenService from "../refresh_tokens/refresh_token.service";
 import UserService from "./user.service";
 
 class UserController {
@@ -10,7 +11,14 @@ class UserController {
 	 */
 
 	async loginUser(parent: any, args: any, context: any) {
+		// Return new refreshToken & an accessToken
 		return await UserService.loginUser(args);
+	}
+
+	async logoutUser(parent: any, args: any, context: any) {
+		// Delete refreshToken associated with login
+		// Returns 1 or 0 depending on whether or not is successful
+		return await RefreshTokenService.deleteRefreshToken(args.token);
 	}
 
 	async getUserById(parent: any, args: any) {

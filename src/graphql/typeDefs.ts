@@ -62,6 +62,7 @@ const typeDefs = gql`
 
 	type Mutation {
 		login(username: String!, password: String!): LoginTokens
+		logout(token: String!): Boolean
 		follow(following_id: Int!): Boolean
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
