@@ -1,0 +1,21 @@
+[X] Add hostname to context - posts image resolver
+[X] GraphQL Testing
+
+[X] Add profile picture support
+[X] Edit profile
+[X] Edit post
+[X] Delete post
+[X] Delete comment
+[X] Delete refreshToken - Logout
+[X] Search profiles profile by username & display
+
+[X] Socket.io support
+[ ] Instant messaging
+[ ] Notification system
+[ ] Google auth setup
+[ ] Apple auth setup
+[ ] Twitter auth setup
+[ ] Integrate GraphQL reporting
+
+[ ] Clean up code
+[ ] Add README.md
