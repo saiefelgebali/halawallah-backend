@@ -91,6 +91,25 @@ class ProfileController {
 		// Return new profile details in json format
 		res.json(result);
 	}
+
+	async updateProfile(parent: any, args: any, context: any) {
+		// Authenticate user
+		if (!context.user.id) {
+			return null;
+		}
+
+		// Get profile id
+		const profile_id = await ProfileService.getProfileIDFromUserID(
+			context.user.id
+		);
+
+		// Return updated profile
+		return await ProfileService.updateProfile(
+			profile_id,
+			args.display,
+			args.bio
+		);
+	}
 }
 
 export default new ProfileController();

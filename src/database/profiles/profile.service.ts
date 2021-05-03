@@ -36,6 +36,10 @@ class ProfileService {
 	uploadPfp(profile_id: number, pfp: string) {
 		return ProfileDAO.updatePfp(profile_id, pfp);
 	}
+
+	updateProfile(profile_id: number, display: string, bio: string) {
+		return ProfileDAO.updateProfile(profile_id, display, bio);
+	}
 }
 
 export default new ProfileService();

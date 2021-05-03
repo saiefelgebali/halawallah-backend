@@ -88,7 +88,27 @@ class ProfileDAO {
 	}
 
 	async updatePfp(profile_id: number, pfp: string) {
-		return await db("profiles").update({ pfp }).where({ profile_id });
+		return (
+			await db("profiles")
+				.update({ pfp })
+				.where({ profile_id })
+				.returning("*")
+		)[0];
+	}
+
+	async updateProfile(profile_id: number, display: string, bio: string) {
+		// Cancel query if none provided
+		if (!display && !bio) {
+			return null;
+		}
+
+		// Make update
+		return (
+			await db("profiles")
+				.update({ display, bio })
+				.where({ profile_id })
+				.returning("*")
+		)[0];
 	}
 }
 

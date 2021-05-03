@@ -34,9 +34,10 @@ const resolvers = {
 
 	Mutation: {
 		login: UserController.loginUser,
+		follow: ProfileController.followProfile,
 		createUser: UserController.createUser,
 		createComment: CommentController.createComment,
-		follow: ProfileController.followProfile,
+		updateProfile: ProfileController.updateProfile,
 		deletePost: PostController.deletePostById,
 		deleteComment: CommentController.deleteCommentById,
 	},
