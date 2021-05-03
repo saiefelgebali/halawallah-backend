@@ -12,10 +12,17 @@
 [X] Socket.io support
 [ ] Instant messaging
 [ ] Notification system
+[ ] Integrate GraphQL reporting
+
 [ ] Google auth setup
 [ ] Apple auth setup
 [ ] Twitter auth setup
-[ ] Integrate GraphQL reporting
+
+[ ] Admin panel
 
 [ ] Clean up code
 [ ] Add README.md
+
+// TODO BEFORE PRODUCTION 
+[ ] Change to Production Database
+[ ] Change socket.io cors to appropriate url (Avoid wildcard)
