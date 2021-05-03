@@ -1,14 +1,19 @@
 import { print, ConsoleColor } from "alamanah-express";
 import app, { settings } from "./main/settings";
 import { connectApolloServer } from "./graphql/apollo";
+import createSocketServer from "./main/sockets";
 import { Application } from "express";
 
 async function run(app: Application) {
 	// Connect graphql server
 	const graphql = await connectApolloServer(app);
 
+	// Connect to socketio server
+	// Accept websocket connections
+	const server = createSocketServer(app);
+
 	// Start Al Amanah server
-	app.listen(settings.port, () => {
+	server.listen(settings.port, () => {
 		// Print out startup details
 		const tag = "SERVER";
 		console.clear();
