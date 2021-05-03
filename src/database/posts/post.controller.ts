@@ -92,6 +92,32 @@ class PostController {
 			return new ApolloError("Unauthorized to delete post");
 		}
 	}
+
+	async updatePostById(parent: any, args: any, context: any) {
+		// Authenticate user
+		if (!context.user) {
+			return new ApolloError(
+				"You must be authenticated to update this post"
+			);
+		}
+
+		// Get profile id
+		const profile_id = await ProfileService.getProfileIDFromUserID(
+			context.user.id
+		);
+
+		// Ensure post's profile matches context profile
+		const post = await PostService.getPostById(args.post_id);
+
+		if (post.profile_id !== profile_id) {
+			return new ApolloError(
+				"You do not have permission to update this post"
+			);
+		}
+
+		// Return updated profile
+		return await PostService.updatePostById(args.post_id, args.caption);
+	}
 }
 
 export default new PostController();

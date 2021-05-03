@@ -1,3 +1,4 @@
+import { ApolloError } from "apollo-server-errors";
 import { Request, Response } from "express";
 import { processRequestImage } from "../../api/process";
 import profileService from "./profile.service";
@@ -94,8 +95,10 @@ class ProfileController {
 
 	async updateProfile(parent: any, args: any, context: any) {
 		// Authenticate user
-		if (!context.user.id) {
-			return null;
+		if (!context.user) {
+			return new ApolloError(
+				"You must be authenticated to updadte this profile"
+			);
 		}
 
 		// Get profile id

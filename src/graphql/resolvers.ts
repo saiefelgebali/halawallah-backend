@@ -38,6 +38,7 @@ const resolvers = {
 		createUser: UserController.createUser,
 		createComment: CommentController.createComment,
 		updateProfile: ProfileController.updateProfile,
+		updatePost: PostController.updatePostById,
 		deletePost: PostController.deletePostById,
 		deleteComment: CommentController.deleteCommentById,
 	},

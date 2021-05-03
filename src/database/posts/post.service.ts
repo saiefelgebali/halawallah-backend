@@ -13,19 +13,23 @@ class PostService {
 		return await PostDAO.createPost(profile_id, image, caption);
 	}
 
-	async getPostsByProfile(profile_id: number, offset: number, limit: number) {
+	getPostsByProfile(profile_id: number, offset: number, limit: number) {
 		return PostDAO.getPostsByProfile(profile_id, offset, limit);
 	}
 
-	async getProfileFeed(profileId: number, offset: number, limit: number) {
+	getProfileFeed(profileId: number, offset: number, limit: number) {
 		return PostDAO.getProfileFeed(profileId, offset, limit);
 	}
 
-	async getPostById(post_id: number) {
+	getPostById(post_id: number) {
 		return PostDAO.getPostById(post_id);
 	}
 
-	async deletePostById(post_id: number) {
+	updatePostById(post_id: number, caption: string) {
+		return PostDAO.updatePostById(post_id, caption);
+	}
+
+	deletePostById(post_id: number) {
 		return PostDAO.deletePostById(post_id);
 	}
 }

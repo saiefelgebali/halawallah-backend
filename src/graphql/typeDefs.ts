@@ -66,6 +66,7 @@ const typeDefs = gql`
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		updateProfile(display: String, bio: String): Profile
+		updatePost(post_id: Int!, caption: String!): Post
 		deletePost(post_id: Int!): Boolean
 		deleteComment(comment_id: Int!): Boolean
 	}

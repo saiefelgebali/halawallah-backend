@@ -20,8 +20,17 @@ class CommentController {
 			return new ApolloError("Unauthenticated requst");
 		}
 
+		// Get profile id
+		const profile_id = await ProfileService.getProfileIDFromUserID(
+			context.user.id
+		);
+
 		// Return new comment
-		return await CommentService.createComment(args);
+		return await CommentService.createComment({
+			post_id: args.post_id,
+			profile_id,
+			text: args.text,
+		});
 	}
 
 	async getPostComments(parent: any, args: any, context: any) {
@@ -58,6 +67,9 @@ class CommentController {
 		if (!comment) {
 			return new ApolloError("Comment does not exist");
 		}
+
+		console.log(comment);
+		console.log(profile_id);
 
 		// Ensure context user matches comment profile
 		if (comment.profile_id === profile_id) {

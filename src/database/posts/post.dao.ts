@@ -96,6 +96,15 @@ class PostDAO {
 		return (await db("posts").select("*").where({ post_id }))[0];
 	}
 
+	async updatePostById(post_id: number, caption: string) {
+		return (
+			await db("posts")
+				.update({ caption })
+				.where({ post_id })
+				.returning("*")
+		)[0];
+	}
+
 	async deletePostById(post_id: number) {
 		try {
 			// Delete post by post_id
