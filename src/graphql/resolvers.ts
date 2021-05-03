@@ -36,6 +36,7 @@ const resolvers = {
 		login: UserController.loginUser,
 		logout: UserController.logoutUser,
 		follow: ProfileController.followProfile,
+		searchProfile: ProfileController.searchProfile,
 		createUser: UserController.createUser,
 		createComment: CommentController.createComment,
 		updateProfile: ProfileController.updateProfile,

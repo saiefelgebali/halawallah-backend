@@ -64,6 +64,11 @@ const typeDefs = gql`
 		login(username: String!, password: String!): LoginTokens
 		logout(token: String!): Boolean
 		follow(following_id: Int!): Boolean
+		searchProfile(
+			query: String!
+			offset: Int
+			limit: Int
+		): PaginatedProfiles
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		updateProfile(display: String, bio: String): Profile

@@ -40,6 +40,10 @@ class ProfileService {
 	updateProfile(profile_id: number, display: string, bio: string) {
 		return ProfileDAO.updateProfile(profile_id, display, bio);
 	}
+
+	searchProfile(query: string, offset: number, limit: number) {
+		return ProfileDAO.searchProfile(query, offset, limit);
+	}
 }
 
 export default new ProfileService();

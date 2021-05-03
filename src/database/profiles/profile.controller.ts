@@ -113,6 +113,15 @@ class ProfileController {
 			args.bio
 		);
 	}
+
+	async searchProfile(parent: any, args: any) {
+		// Returns a paginated response of profiles that match query
+		return await ProfileService.searchProfile(
+			args.query,
+			args.offset,
+			args.limit
+		);
+	}
 }
 
 export default new ProfileController();
