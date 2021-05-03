@@ -10,6 +10,7 @@ const typeDefs = gql`
 		profile_id: Int
 		display: String
 		bio: String
+		pfp: String
 		user: User
 		following(offset: Int, limit: Int): PaginatedProfiles
 		posts(offset: Int, limit: Int): PaginatedPosts

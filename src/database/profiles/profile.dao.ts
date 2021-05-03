@@ -86,6 +86,10 @@ class ProfileDAO {
 			data,
 		};
 	}
+
+	async updatePfp(profile_id: number, pfp: string) {
+		return await db("profiles").update({ pfp }).where({ profile_id });
+	}
 }
 
 export default new ProfileDAO();

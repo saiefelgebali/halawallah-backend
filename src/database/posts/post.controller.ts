@@ -13,7 +13,7 @@ class PostController {
 	async createPost(req: Request, res: Response) {
 		// Handle unauthorized users
 		if (!req.user) {
-			return res.status(403).send("Unauthorized access");
+			return res.status(403).send("Unauthenticated request");
 		}
 
 		// Process image

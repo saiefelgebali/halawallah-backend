@@ -1,3 +1,6 @@
+import { Request, Response } from "express";
+import { processRequestImage } from "../../api/process";
+import profileService from "./profile.service";
 import ProfileService from "./profile.service";
 
 class ProfileController {
@@ -64,6 +67,29 @@ class ProfileController {
 
 		// Otherwise return guest profile
 		return null;
+	}
+
+	async uploadPfp(req: Request, res: Response) {
+		// Handle unauthorized users
+		if (!req.user) {
+			return res.status(403).send("Unauthenticated request");
+		}
+
+		// Process pfp image
+		await processRequestImage("pfp", req);
+
+		// Get profile id
+		const profile_id = await ProfileService.getProfileIDFromUserID(
+			req.user.id
+		);
+
+		const result = await ProfileService.uploadPfp(
+			profile_id,
+			req.file.filename
+		);
+
+		// Return new profile details in json format
+		res.json(result);
 	}
 }
 

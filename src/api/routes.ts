@@ -1,4 +1,4 @@
-import { uploadPostRoute } from "./upload";
+import { uploadPostRoute, uploadPfpRoute } from "./upload";
 import { getImageRoute } from "./media";
 
-export default [uploadPostRoute, getImageRoute];
+export default [uploadPostRoute, uploadPfpRoute, getImageRoute];

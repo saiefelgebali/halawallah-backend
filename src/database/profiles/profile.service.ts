@@ -32,6 +32,10 @@ class ProfileService {
 	getProfileFollowing(id: number, offset: number, limit: number) {
 		return ProfileDAO.getProfileFollowing(id, offset, limit);
 	}
+
+	uploadPfp(profile_id: number, pfp: string) {
+		return ProfileDAO.updatePfp(profile_id, pfp);
+	}
 }
 
 export default new ProfileService();
