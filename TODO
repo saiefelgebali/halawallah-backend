@@ -14,6 +14,7 @@
 [ ] Notification system
 [ ] Integrate GraphQL reporting
 [ ] More testing
+[ ] Add timestamps to comments, posts and format them
 
 [ ] Google auth setup
 [ ] Apple auth setup

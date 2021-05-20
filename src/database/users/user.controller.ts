@@ -12,7 +12,14 @@ class UserController {
 
 	async loginUser(parent: any, args: any, context: any) {
 		// Return new refreshToken & an accessToken
-		return await UserService.loginUser(args);
+		const res = await UserService.loginUser(args);
+
+		// Handle error
+		if (res.error) {
+			return new ApolloError(res.error);
+		}
+
+		return res;
 	}
 
 	async logoutUser(parent: any, args: any, context: any) {
