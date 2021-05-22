@@ -20,6 +20,10 @@ const resolvers = {
 		profile: ProfileController.getProfileById,
 		comments: CommentController.getPostComments,
 		image: (parent: any, args: any, context: any) => {
+			// Handle empty image
+			if (!parent.image) {
+				return null;
+			}
 			return `${context.url}/api/media/img/post/${parent.image}`;
 		},
 	},
