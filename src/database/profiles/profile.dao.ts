@@ -24,6 +24,14 @@ class ProfileDAO {
 			.first();
 	}
 
+	async getProfileByUsername(username: string) {
+		return await db("profiles")
+			.select("profiles.*")
+			.join("users", "profiles.user_id", "users.user_id")
+			.where("users.username", username)
+			.first();
+	}
+
 	async getProfileIDFromUserID(user_id: number) {
 		return await db("profiles")
 			.select("profile_id")

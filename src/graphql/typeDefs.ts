@@ -55,20 +55,21 @@ const typeDefs = gql`
 
 	type Query {
 		getUserById(user_id: Int!): User
+		getProfileByUsername(username: String!): Profile
 		getProfileById(profile_id: Int!): Profile
 		me: Profile
 		feed(offset: Int, limit: Int): PaginatedPosts
+		searchProfile(
+			query: String!
+			offset: Int
+			limit: Int
+		): PaginatedProfiles
 	}
 
 	type Mutation {
 		login(username: String!, password: String!): LoginTokens
 		logout(token: String!): Boolean
 		follow(following_id: Int!): Boolean
-		searchProfile(
-			query: String!
-			offset: Int
-			limit: Int
-		): PaginatedProfiles
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		updateProfile(display: String, bio: String): Profile

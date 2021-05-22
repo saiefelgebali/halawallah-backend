@@ -10,6 +10,10 @@ class ProfileController {
 	 * @returns Queried results
 	 */
 
+	async getProfileByUsername(parent: any, args: any, context: any) {
+		return await ProfileService.getProfileByUsername(args.username);
+	}
+
 	async getProfileById(parent: any, args: any, context: any) {
 		// Get profile_id from either args or parent
 		let profile_id;

@@ -29,6 +29,9 @@ class ProfileService {
 	getProfile(id: number) {
 		return ProfileDAO.getProfile(id);
 	}
+	getProfileByUsername(username: string) {
+		return ProfileDAO.getProfileByUsername(username);
+	}
 	getProfileFollowing(id: number, offset: number, limit: number) {
 		return ProfileDAO.getProfileFollowing(id, offset, limit);
 	}
