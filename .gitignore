@@ -1,5 +1,7 @@
 node_modules
-media
+package-lock.json
+media/img/pfp/*
+media/img/post/*
 coverage
 lib
 config.ts

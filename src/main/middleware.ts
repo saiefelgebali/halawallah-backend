@@ -2,6 +2,7 @@ import { ConsoleColor, print } from "alamanah-express";
 import { RequestHandler } from "express";
 import authentication from "../auth/middleware";
 import { getAbsoluteUrl } from "../util/url";
+import cors from "cors";
 
 // Log HTTP Requests
 const logger: RequestHandler = (req, res, next) => {
@@ -9,4 +10,4 @@ const logger: RequestHandler = (req, res, next) => {
 	next();
 };
 
-export default [authentication, logger];
+export default [authentication, logger, cors()];
