@@ -35,7 +35,7 @@ export const uploadPostRoute = route({
 // Update pfp using multer middleware
 export const uploadPfpRoute = route({
 	method: "POST",
-	path: "/upload/profile",
+	path: "/upload/pfp",
 	view: ProfileController.uploadPfp,
 	middleware: pfpUpload,
 });

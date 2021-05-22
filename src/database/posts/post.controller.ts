@@ -19,8 +19,6 @@ class PostController {
 		// Process image
 		const image = await processRequestImage("post", req);
 
-		console.log(req.file);
-
 		// Return new post in json format
 		res.json(
 			await PostService.createPost(
