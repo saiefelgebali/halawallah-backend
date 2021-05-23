@@ -56,6 +56,11 @@ const typeDefs = gql`
 	type Query {
 		getUserById(user_id: Int!): User
 		getProfileByUsername(username: String!): Profile
+		getPostsByUsername(
+			username: String!
+			offset: Int!
+			limit: Int!
+		): PaginatedPosts
 		getProfileById(profile_id: Int!): Profile
 		me: Profile
 		feed(offset: Int, limit: Int): PaginatedPosts

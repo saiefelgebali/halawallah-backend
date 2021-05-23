@@ -38,6 +38,7 @@ const resolvers = {
 		me: ProfileController.getMyProfile,
 		feed: PostController.getMyFeed,
 		getProfileByUsername: ProfileController.getProfileByUsername,
+		getPostsByUsername: PostController.getPostsByProfileUsername,
 		searchProfile: ProfileController.searchProfile,
 	},
 

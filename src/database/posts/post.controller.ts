@@ -38,6 +38,24 @@ class PostController {
 		);
 	}
 
+	async getPostsByProfileUsername(parent: any, args: any) {
+		// Get profile id from username
+		const profile = await ProfileService.getProfileByUsername(
+			args.username
+		);
+
+		if (!profile) {
+			return new ApolloError("User does not exist");
+		}
+
+		// Return paginated response of posts from username
+		return await PostService.getPostsByProfile(
+			profile.profile_id,
+			args.offset,
+			args.limit
+		);
+	}
+
 	async getMyFeed(parent: any, args: any, context: any) {
 		// Try to access user_id from context
 		const user = context.user;
