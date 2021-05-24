@@ -12,6 +12,10 @@ const resolvers = {
 		following: ProfileController.getProfileFollowingById,
 		posts: PostController.getPostsByProfile,
 		pfp: (parent: any, args: any, context: any) => {
+			// Handle empty pfp
+			if (!parent.pfp) {
+				return null;
+			}
 			return `${context.url}/api/media/img/pfp/${parent.pfp}`;
 		},
 	},

@@ -27,13 +27,15 @@ class PostDAO {
 
 		// Get post data
 		const data = await db("posts")
-			.select("*")
+			.select("posts.*")
+			.innerJoin("profiles", "posts.profile_id", "profiles.profile_id")
 			.innerJoin(
 				"profile_following",
 				"posts.profile_id",
 				"profile_following.following_id"
 			)
 			.where("profile_following.profile_id", profile_id)
+			.orWhere("posts.profile_id", profile_id)
 			.orderBy("posts.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
@@ -42,11 +44,17 @@ class PostDAO {
 		const agg = (
 			await db("posts")
 				.innerJoin(
+					"profiles",
+					"posts.profile_id",
+					"profiles.profile_id"
+				)
+				.innerJoin(
 					"profile_following",
 					"posts.profile_id",
 					"profile_following.following_id"
 				)
 				.where("profile_following.profile_id", profile_id)
+				.orWhere("posts.profile_id", profile_id)
 				.count()
 		)[0].count;
 
