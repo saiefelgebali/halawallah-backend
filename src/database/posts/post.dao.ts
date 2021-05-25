@@ -76,7 +76,7 @@ class PostDAO {
 		offset = offset || 0;
 		const data = await db("posts")
 			.join("profiles", "posts.profile_id", "profiles.profile_id")
-			.select("*")
+			.select("posts.*")
 			.where("posts.profile_id", profile_id)
 			.orderBy("posts.created_at", "desc")
 			.offset(offset)

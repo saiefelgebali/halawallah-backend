@@ -29,6 +29,11 @@ class PostController {
 		);
 	}
 
+	async getPostsById(parent: any, args: any) {
+		// Return specific post
+		return await PostService.getPostById(args.post_id);
+	}
+
 	async getPostsByProfile(parent: any, args: any) {
 		// Return paginated response of posts
 		return await PostService.getPostsByProfile(

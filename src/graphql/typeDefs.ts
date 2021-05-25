@@ -22,6 +22,7 @@ const typeDefs = gql`
 		caption: String
 		profile: Profile
 		comments(offset: Int, limit: Int): PaginatedComments
+		created_at: String
 	}
 
 	type Comment {
@@ -62,6 +63,7 @@ const typeDefs = gql`
 			limit: Int!
 		): PaginatedPosts
 		getProfileById(profile_id: Int!): Profile
+		getPostById(post_id: Int!): Post
 		me: Profile
 		feed(offset: Int, limit: Int): PaginatedPosts
 		searchProfile(

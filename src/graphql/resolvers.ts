@@ -30,6 +30,10 @@ const resolvers = {
 			}
 			return `${context.url}/api/media/img/post/${parent.image}`;
 		},
+		created_at: (parent: any, args: any, context: any) => {
+			// Return timestamp in ISO format as a string
+			return new Date(parent.created_at).toISOString();
+		},
 	},
 
 	Comment: {
@@ -39,6 +43,7 @@ const resolvers = {
 	Query: {
 		getUserById: UserController.getUserById,
 		getProfileById: ProfileController.getProfileById,
+		getPostById: PostController.getPostsById,
 		me: ProfileController.getMyProfile,
 		feed: PostController.getMyFeed,
 		getProfileByUsername: ProfileController.getProfileByUsername,
