@@ -41,7 +41,7 @@ class CommentDAO {
 
 		// Get comments
 		const data = await db("comments")
-			.select("*")
+			.select("comments.*")
 			.innerJoin("posts", "posts.post_id", "comments.post_id")
 			.where("posts.post_id", post_id)
 			.orderBy("comments.created_at", "desc")

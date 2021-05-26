@@ -44,6 +44,7 @@ const resolvers = {
 		getUserById: UserController.getUserById,
 		getProfileById: ProfileController.getProfileById,
 		getPostById: PostController.getPostsById,
+		getCommentsByPost: CommentController.getPostComments,
 		me: ProfileController.getMyProfile,
 		feed: PostController.getMyFeed,
 		getProfileByUsername: ProfileController.getProfileByUsername,

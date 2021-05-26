@@ -64,6 +64,11 @@ const typeDefs = gql`
 		): PaginatedPosts
 		getProfileById(profile_id: Int!): Profile
 		getPostById(post_id: Int!): Post
+		getCommentsByPost(
+			post_id: Int!
+			offset: Int
+			limit: Int
+		): PaginatedComments
 		me: Profile
 		feed(offset: Int, limit: Int): PaginatedPosts
 		searchProfile(

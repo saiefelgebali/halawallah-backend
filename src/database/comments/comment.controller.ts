@@ -34,11 +34,16 @@ class CommentController {
 	}
 
 	async getPostComments(parent: any, args: any, context: any) {
-		// Skip invalid requests
-		if (!parent.post_id) {
-			return new ApolloError("Could not handle request");
+		// Send post by args
+		if (args && args.post_id) {
+			return await CommentService.getComments({
+				post_id: args.post_id,
+				offset: args.offset,
+				limit: args.limit,
+			});
 		}
 
+		// Send post by parent
 		return await CommentService.getComments({
 			post_id: parent.post_id,
 			offset: args.offset,
