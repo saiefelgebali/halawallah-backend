@@ -22,7 +22,7 @@ const postUpload = multer({
 const pfpUpload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter: imageFilter,
-}).single("image");
+}).single("pfp");
 
 // Upload post using multer middleware
 export const uploadPostRoute = route({

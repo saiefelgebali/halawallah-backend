@@ -81,17 +81,14 @@ class ProfileController {
 		}
 
 		// Process pfp image
-		await processRequestImage("pfp", req);
+		const pfp = await processRequestImage("pfp", req);
 
 		// Get profile id
 		const profile_id = await ProfileService.getProfileIDFromUserID(
 			req.user.id
 		);
 
-		const result = await ProfileService.uploadPfp(
-			profile_id,
-			req.file.filename
-		);
+		const result = await ProfileService.uploadPfp(profile_id, pfp || "");
 
 		// Return new profile details in json format
 		res.json(result);
