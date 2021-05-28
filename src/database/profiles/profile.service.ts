@@ -26,6 +26,9 @@ class ProfileService {
 	followProfile(profile_id: number, following_id: number) {
 		return ProfileDAO.followProfile(profile_id, following_id);
 	}
+	checkFollowing(profile_id: number, following_id: number) {
+		return ProfileDAO.checkFollowing(profile_id, following_id);
+	}
 	getProfile(id: number) {
 		return ProfileDAO.getProfile(id);
 	}

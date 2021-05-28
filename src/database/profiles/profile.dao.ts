@@ -53,14 +53,28 @@ class ProfileDAO {
 			await db("profile_following")
 				.delete()
 				.where({ profile_id, following_id });
-			return false;
 		}
 
 		// If not already following - insert new row
 		else if (!isFollowing) {
 			await db("profile_following").insert({ profile_id, following_id });
-			return true;
 		}
+
+		// Return new profile details
+		return await db("profiles")
+			.select("*")
+			.where({ profile_id: following_id })
+			.first();
+	}
+
+	async checkFollowing(profile_id: number, following_id: number) {
+		// Check if user already follows target
+		const following = await db("profile_following")
+			.select("*")
+			.where({ profile_id, following_id });
+
+		// Consider whether or not already following
+		return following.length ? true : false;
 	}
 
 	async getProfileFollowing(id: number, offset: number, limit: number) {

@@ -18,6 +18,7 @@ const resolvers = {
 			}
 			return `${context.url}/api/media/img/pfp/${parent.pfp}`;
 		},
+		isFollowing: ProfileController.checkFollowing,
 	},
 
 	Post: {

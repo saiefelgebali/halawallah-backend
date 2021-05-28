@@ -14,6 +14,7 @@ const typeDefs = gql`
 		user: User
 		following(offset: Int, limit: Int): PaginatedProfiles
 		posts(offset: Int, limit: Int): PaginatedPosts
+		isFollowing: Boolean
 	}
 
 	type Post {
@@ -81,7 +82,7 @@ const typeDefs = gql`
 	type Mutation {
 		login(username: String!, password: String!): LoginTokens
 		logout(token: String!): Boolean
-		follow(following_id: Int!): Boolean
+		follow(following_id: Int!): Profile
 		createUser(username: String!, password: String!): Profile
 		createComment(post_id: Int!, text: String!): Comment
 		updateProfile(display: String, bio: String): Profile

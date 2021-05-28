@@ -61,13 +61,26 @@ class ProfileController {
 		);
 	}
 
+	async checkFollowing(parent: any, args: any, context: any) {
+		// If user is authenticated - return user's profile
+		if (context.user) {
+			const profile_id = await ProfileService.getProfileIDFromUserID(
+				context.user.id
+			);
+			return ProfileService.checkFollowing(profile_id, parent.profile_id);
+		}
+
+		// If not authenticated return error
+		return null;
+	}
+
 	async getMyProfile(parent: any, args: any, context: any) {
 		// If user is authenticated - return user's profile
 		if (context.user) {
-			const profle_id = await ProfileService.getProfileIDFromUserID(
+			const profile_id = await ProfileService.getProfileIDFromUserID(
 				context.user.id
 			);
-			return ProfileService.getProfile(profle_id);
+			return ProfileService.getProfile(profile_id);
 		}
 
 		// Otherwise return guest profile
