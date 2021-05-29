@@ -1,5 +1,4 @@
 import { ApolloError } from "apollo-server-errors";
-import { Request, Response } from "express";
 import ProfileService from "../profiles/profile.service";
 import RefreshTokenService from "../refresh_tokens/refresh_token.service";
 import UserService from "./user.service";

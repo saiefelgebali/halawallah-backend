@@ -8,7 +8,7 @@
     "dev": "nodemon -r dotenv/config src/index.ts",
     "test": "jest",
     "build": "tsc -p .",
-    "makemigrate": "npx knex migrate:make init -x ts --migrations-directory src/database/migrations/",
+    "makemigrate": "npx knex migrate:make init -x ts --knexfile src/database/config.ts",
     "migrate": "npx knex migrate:latest --knexfile src/database/config.ts",
     "makeseed": "npx knex seed:make --knexfile src/database/config.ts new_seed",
     "seed": "npx knex seed:run --knexfile src/database/config.ts"
