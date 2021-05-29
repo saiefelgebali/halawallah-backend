@@ -44,6 +44,7 @@ const resolvers = {
 
 	ChatRoom: {
 		members: ChatRoomsController.getChatRoomMembers,
+		group: ChatRoomsController.getGroupChat,
 	},
 
 	// [ROOT QUERY]
@@ -63,6 +64,7 @@ const resolvers = {
 		feed: PostController.getMyFeed,
 
 		// [CHAT]
+		getChatRoomById: ChatRoomsController.getChatRoom,
 	},
 
 	// [ROOT MUTATION]
@@ -83,6 +85,8 @@ const resolvers = {
 
 		// [CHAT]
 		createChatRoom: ChatRoomsController.createChatRoom,
+		addMembersToChatRoom: ChatRoomsController.addMembersToChatRoom,
+		updateGroupChatName: ChatRoomsController.updateGroupChatName,
 	},
 };
 

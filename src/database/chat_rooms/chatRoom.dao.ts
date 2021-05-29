@@ -70,19 +70,20 @@ class ChatRoomDAO {
 	}
 
 	async addMembersToChatRoom(room_id: number, profileIds: number[]) {
+		// 1. Create new profile <---> chat_room connections
 		try {
-			// 1. Create new profile <---> chat_room connections
-			const members = await db("profile_chat_room")
-				.insert(
-					profileIds.map((id) => ({
-						profile_id: id,
-						room_id,
-					}))
-				)
-				.returning("*");
+			return (
+				await db("profile_chat_room")
+					.insert(
+						profileIds.map((id) => ({
+							profile_id: id,
+							room_id,
+						}))
+					)
+					.returning("*")
+			)[0];
 		} catch (error) {
-			// Unique constraint may be violated
-			return error;
+			throw error;
 		}
 	}
 
@@ -100,6 +101,11 @@ class ChatRoomDAO {
 			.where("profile_chat_room.profile_id", profile_id);
 
 		return chatRooms;
+	}
+
+	async getGroupChat(room_id: number) {
+		// Return group chat by using room_id
+		return (await db("group_chats").select("*").where({ room_id }))[0];
 	}
 
 	async updateGroupChatName(room_id: number, name: string) {

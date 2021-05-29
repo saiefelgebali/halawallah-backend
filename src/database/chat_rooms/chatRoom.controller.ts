@@ -24,6 +24,14 @@ class ChatRoomController {
 		return chatRoom;
 	}
 
+	async getChatRoom(parent: any, args: any) {
+		// 1. Query for chatroom
+		const chatRoom = await ChatRoomService.getChatRoom(args.room_id);
+
+		// 2. Return chatRoom object
+		return chatRoom;
+	}
+
 	async getChatRoomMembers(parent: any, args: any, context: any) {
 		if (!parent?.room_id) return null;
 
@@ -35,6 +43,36 @@ class ChatRoomController {
 
 		// 3. Return array of profiles
 		return members;
+	}
+
+	async addMembersToChatRoom(parent: any, args: any, context: any) {
+		// 1. Make update query
+		const chatRoom = await ChatRoomService.addMembersToChatRoom(
+			args.room_id,
+			args.profileIds
+		);
+
+		// 2. Return chatRoom
+		return chatRoom;
+	}
+
+	async updateGroupChatName(parent: any, args: any, context: any) {
+		// 1. Make update query
+		const chatRoom = await ChatRoomService.updateGroupChatName(
+			args.room_id,
+			args.name
+		);
+
+		// 2. Return chatRoom
+		return chatRoom;
+	}
+
+	async getGroupChat(parent: any, args: any, context: any) {
+		// 1. Query group chat
+		const groupChat = ChatRoomService.getGroupChat(parent.room_id);
+
+		// 2. Return group chat
+		return groupChat;
 	}
 }
 
