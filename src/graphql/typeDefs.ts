@@ -120,7 +120,8 @@ const typeDefs = gql`
 		feed(offset: Int, limit: Int): PaginatedPosts
 
 		# [CHAT]
-		getChatRoomById(room_id: Int): ChatRoom
+		getChatRoomById(room_id: Int!): ChatRoom
+		getProfileChatRooms(offset: Int, limit: Int): PaginatedChatRooms
 	}
 
 	# [ROOT MUTATION]

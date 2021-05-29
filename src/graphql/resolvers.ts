@@ -65,6 +65,7 @@ const resolvers = {
 
 		// [CHAT]
 		getChatRoomById: ChatRoomsController.getChatRoom,
+		getProfileChatRooms: ChatRoomsController.getProfileChatRooms,
 	},
 
 	// [ROOT MUTATION]

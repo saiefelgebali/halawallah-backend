@@ -45,6 +45,26 @@ class ChatRoomController {
 		return members;
 	}
 
+	async getProfileChatRooms(parent: any, args: any, context: any) {
+		// 0. Authorize request
+		if (!context?.user?.id) return null;
+
+		// 1. Get context profile
+		const profileId = await profileService.getProfileIDFromUserID(
+			context.user.id
+		);
+
+		// 2. Make request to db
+		const chatRooms = await ChatRoomService.getProfileChatRooms(
+			profileId,
+			args.offset,
+			args.limit
+		);
+
+		// 3. Return new paginated chatRoom response
+		return chatRooms;
+	}
+
 	async addMembersToChatRoom(parent: any, args: any, context: any) {
 		// 1. Make update query
 		const chatRoom = await ChatRoomService.addMembersToChatRoom(

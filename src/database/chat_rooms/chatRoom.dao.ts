@@ -87,20 +87,42 @@ class ChatRoomDAO {
 		}
 	}
 
-	//  TODO: Return a paginated response
-	async getProfileChatRooms(profile_id: number) {
-		// 1a. Query ChatRooms
-		const chatRooms = await db("chat_rooms")
-			// 1b. Join with ProfileChatRoom table
+	async getProfileChatRooms(
+		profile_id: number,
+		offset: number = 0,
+		limit: number = 0
+	) {
+		// 1a. Get Count of all chatRooms relating to profile
+		// ~~ bitwise double NOT, used to parse int
+		const count = ~~(
+			await db("chat_rooms")
+				// 1b. Join with ProfileChatRoom table
+				.join(
+					"profile_chat_room",
+					"profile_chat_room.room_id",
+					"chat_rooms.room_id"
+				)
+				.where("profile_chat_room.profile_id", profile_id)
+				.count()
+		)[0]?.count;
+
+		// 2. Determine hasMore
+		const hasMore = offset + limit < count;
+
+		// 3. Query for chatRooms
+		const data = await db("chat_rooms")
+			// 3b. Join with ProfileChatRoom table
 			.join(
 				"profile_chat_room",
 				"profile_chat_room.room_id",
 				"chat_rooms.room_id"
 			)
-			.select("chat_rooms.*")
-			.where("profile_chat_room.profile_id", profile_id);
+			.select("*")
+			.where("profile_chat_room.profile_id", profile_id)
+			.offset(offset)
+			.limit(limit);
 
-		return chatRooms;
+		return { count, hasMore, data };
 	}
 
 	async getGroupChat(room_id: number) {
