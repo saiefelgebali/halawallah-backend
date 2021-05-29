@@ -65,6 +65,7 @@ const typeDefs = gql`
 		room_id: Int
 		members: [Profile]
 		group: GroupChat
+		messages(offset: Int, limit: Int): PaginatedMessages
 	}
 
 	type GroupChat {
@@ -122,6 +123,7 @@ const typeDefs = gql`
 		# [CHAT]
 		getChatRoomById(room_id: Int!): ChatRoom
 		getProfileChatRooms(offset: Int, limit: Int): PaginatedChatRooms
+		getChatRoomMessages(offset: Int, limit: Int): PaginatedMessages
 	}
 
 	# [ROOT MUTATION]
@@ -144,6 +146,8 @@ const typeDefs = gql`
 		createChatRoom(profileIds: [Int]!): ChatRoom
 		addMembersToChatRoom(room_id: Int!, profileIds: [Int]!): ChatRoom
 		updateGroupChatName(room_id: Int!, name: String!): GroupChat
+		createMessage(room_id: Int!, text: String!): Message
+		deleteMessage(message_id: Int!): Boolean
 	}
 `;
 

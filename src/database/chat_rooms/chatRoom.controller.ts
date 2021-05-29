@@ -1,5 +1,8 @@
+import { ApolloError } from "apollo-server-errors";
 import profileService from "../profiles/profile.service";
 import ChatRoomService from "./chatRoom.service";
+
+const unauthMessage = new ApolloError("Unauthorized Access");
 
 class ChatRoomController {
 	/**
@@ -8,7 +11,7 @@ class ChatRoomController {
 
 	async createChatRoom(parent: any, args: any, context: any) {
 		// 0. Authorize request
-		if (!context?.user?.id) return null;
+		if (!context?.user?.id) return unauthMessage;
 
 		// 1. Get context profile
 		const profileId = await profileService.getProfileIDFromUserID(
@@ -26,7 +29,9 @@ class ChatRoomController {
 
 	async getChatRoom(parent: any, args: any) {
 		// 1. Query for chatroom
-		const chatRoom = await ChatRoomService.getChatRoom(args.room_id);
+		const chatRoom = await ChatRoomService.getChatRoom(
+			args.room_id || parent.room_id
+		);
 
 		// 2. Return chatRoom object
 		return chatRoom;
@@ -47,7 +52,7 @@ class ChatRoomController {
 
 	async getProfileChatRooms(parent: any, args: any, context: any) {
 		// 0. Authorize request
-		if (!context?.user?.id) return null;
+		if (!context?.user?.id) return unauthMessage;
 
 		// 1. Get context profile
 		const profileId = await profileService.getProfileIDFromUserID(

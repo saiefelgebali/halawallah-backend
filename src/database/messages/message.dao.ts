@@ -21,10 +21,19 @@ class MesssageDAO {
 		return message;
 	}
 
-	async deleteMessage(message_id: number) {
-		// Delete message by its message_id
+	async deleteMessage(message_id: number, profile_id: number) {
+		// 1. Check if profile is authorized to delete message
+		const validReq = (
+			await db("messages").select("*").where({ message_id, profile_id })
+		)[0];
+
+		if (!validReq) {
+			throw Error("Not authorized to delete message");
+		}
+
+		// 2. Delete message by its message_id
 		// Return a boolean - true for success
-		return !(await db("messages").delete().where({ message_id }));
+		return await db("messages").delete().where({ message_id });
 	}
 
 	async getChatRoomMessages(

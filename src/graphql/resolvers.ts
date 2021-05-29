@@ -4,6 +4,7 @@ import ProfileController from "../database/profiles/profile.controller";
 import PostController from "../database/posts/post.controller";
 import CommentController from "../database/comments/comment.controller";
 import ChatRoomsController from "../database/chat_rooms/chatRoom.controller";
+import MessageController from "../database/messages/message.controller";
 
 const resolvers = {
 	Profile: {
@@ -45,6 +46,12 @@ const resolvers = {
 	ChatRoom: {
 		members: ChatRoomsController.getChatRoomMembers,
 		group: ChatRoomsController.getGroupChat,
+		messages: MessageController.getChatRoomMessages,
+	},
+
+	Message: {
+		room: ChatRoomsController.getChatRoom,
+		profile: ProfileController.getProfileById,
 	},
 
 	// [ROOT QUERY]
@@ -66,6 +73,7 @@ const resolvers = {
 		// [CHAT]
 		getChatRoomById: ChatRoomsController.getChatRoom,
 		getProfileChatRooms: ChatRoomsController.getProfileChatRooms,
+		getChatRoomMessages: MessageController.getChatRoomMessages,
 	},
 
 	// [ROOT MUTATION]
@@ -88,6 +96,8 @@ const resolvers = {
 		createChatRoom: ChatRoomsController.createChatRoom,
 		addMembersToChatRoom: ChatRoomsController.addMembersToChatRoom,
 		updateGroupChatName: ChatRoomsController.updateGroupChatName,
+		createMessage: MessageController.createMessage,
+		deleteMessage: MessageController.deleteMessage,
 	},
 };
 
