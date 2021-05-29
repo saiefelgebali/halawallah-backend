@@ -3,6 +3,7 @@ import UserController from "../database/users/user.controller";
 import ProfileController from "../database/profiles/profile.controller";
 import PostController from "../database/posts/post.controller";
 import CommentController from "../database/comments/comment.controller";
+import ChatRoomsController from "../database/chat_rooms/chatRoom.controller";
 
 const resolvers = {
 	Profile: {
@@ -41,28 +42,47 @@ const resolvers = {
 		profile: ProfileController.getProfileById,
 	},
 
-	Query: {
-		getUserById: UserController.getUserById,
-		getProfileById: ProfileController.getProfileById,
-		getPostById: PostController.getPostsById,
-		getCommentsByPost: CommentController.getPostComments,
-		me: ProfileController.getMyProfile,
-		feed: PostController.getMyFeed,
-		getProfileByUsername: ProfileController.getProfileByUsername,
-		getPostsByUsername: PostController.getPostsByProfileUsername,
-		searchProfile: ProfileController.searchProfile,
+	ChatRoom: {
+		members: ChatRoomsController.getChatRoomMembers,
 	},
 
+	// [ROOT QUERY]
+
+	Query: {
+		// [PROFILE]
+		getUserById: UserController.getUserById,
+		getProfileById: ProfileController.getProfileById,
+		me: ProfileController.getMyProfile,
+		getProfileByUsername: ProfileController.getProfileByUsername,
+		searchProfile: ProfileController.searchProfile,
+
+		// [POST]
+		getPostById: PostController.getPostsById,
+		getPostsByUsername: PostController.getPostsByProfileUsername,
+		getCommentsByPost: CommentController.getPostComments,
+		feed: PostController.getMyFeed,
+
+		// [CHAT]
+	},
+
+	// [ROOT MUTATION]
+
 	Mutation: {
+		// [PROFILE]
+		createUser: UserController.createUser,
+		updateProfile: ProfileController.updateProfile,
+		follow: ProfileController.followProfile,
 		login: UserController.loginUser,
 		logout: UserController.logoutUser,
-		follow: ProfileController.followProfile,
-		createUser: UserController.createUser,
-		createComment: CommentController.createComment,
-		updateProfile: ProfileController.updateProfile,
+
+		// [POST]
 		updatePost: PostController.updatePostById,
 		deletePost: PostController.deletePostById,
+		createComment: CommentController.createComment,
 		deleteComment: CommentController.deleteCommentById,
+
+		// [CHAT]
+		createChatRoom: ChatRoomsController.createChatRoom,
 	},
 };
 

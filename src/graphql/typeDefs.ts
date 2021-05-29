@@ -1,6 +1,8 @@
 import { gql } from "apollo-server-core";
 
 const typeDefs = gql`
+	# [Profile]
+
 	type User {
 		user_id: Int
 		username: String
@@ -16,6 +18,19 @@ const typeDefs = gql`
 		posts(offset: Int, limit: Int): PaginatedPosts
 		isFollowing: Boolean
 	}
+
+	type PaginatedProfiles {
+		count: Int
+		hasMore: Boolean
+		data: [Profile]
+	}
+
+	type LoginTokens {
+		refreshToken: String
+		accessToken: String
+	}
+
+	# [Post]
 
 	type Post {
 		post_id: Int
@@ -38,57 +53,89 @@ const typeDefs = gql`
 		data: [Post]
 	}
 
-	type PaginatedProfiles {
-		count: Int
-		hasMore: Boolean
-		data: [Profile]
-	}
-
 	type PaginatedComments {
 		count: Int
 		hasMore: Boolean
 		data: [Comment]
 	}
 
-	type LoginTokens {
-		refreshToken: String
-		accessToken: String
+	# [CHAT]
+
+	type ChatRoom {
+		room_id: Int
+		members: [Profile]
+		name: String
+		image: String
 	}
 
+	type Message {
+		message_id: Int
+		room: ChatRoom
+		profile: Profile
+		text: String
+	}
+
+	type PaginatedChatRooms {
+		count: Int
+		hasMore: Boolean
+		data: [ChatRoom]
+	}
+
+	type PaginatedMessages {
+		count: Int
+		hasMore: Boolean
+		data: [Message]
+	}
+
+	# [ROOT QUERY]
+
 	type Query {
+		# [PROFILE]
 		getUserById(user_id: Int!): User
 		getProfileByUsername(username: String!): Profile
-		getPostsByUsername(
-			username: String!
-			offset: Int!
-			limit: Int!
-		): PaginatedPosts
 		getProfileById(profile_id: Int!): Profile
+		me: Profile
+		searchProfile(
+			query: String!
+			offset: Int
+			limit: Int
+		): PaginatedProfiles
+
+		# [POST]
 		getPostById(post_id: Int!): Post
 		getCommentsByPost(
 			post_id: Int!
 			offset: Int
 			limit: Int
 		): PaginatedComments
-		me: Profile
+		getPostsByUsername(
+			username: String!
+			offset: Int!
+			limit: Int!
+		): PaginatedPosts
 		feed(offset: Int, limit: Int): PaginatedPosts
-		searchProfile(
-			query: String!
-			offset: Int
-			limit: Int
-		): PaginatedProfiles
+
+		# [CHAT]
 	}
 
+	# [ROOT MUTATION]
+
 	type Mutation {
+		# [PROFILE]
+		createUser(username: String!, password: String!): Profile
+		updateProfile(display: String, bio: String): Profile
+		follow(following_id: Int!): Profile
 		login(username: String!, password: String!): LoginTokens
 		logout(token: String!): Boolean
-		follow(following_id: Int!): Profile
-		createUser(username: String!, password: String!): Profile
-		createComment(post_id: Int!, text: String!): Comment
-		updateProfile(display: String, bio: String): Profile
+
+		# [POST]
 		updatePost(post_id: Int!, caption: String!): Post
 		deletePost(post_id: Int!): Boolean
+		createComment(post_id: Int!, text: String!): Comment
 		deleteComment(comment_id: Int!): Boolean
+
+		# [CHAT]
+		createChatRoom(profileIds: [Int]!): ChatRoom
 	}
 `;
 

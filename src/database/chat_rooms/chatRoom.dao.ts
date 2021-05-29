@@ -72,7 +72,7 @@ class ChatRoomDAO {
 	async addMembersToChatRoom(room_id: number, profileIds: number[]) {
 		try {
 			// 1. Create new profile <---> chat_room connections
-			return await db("profile_chat_room")
+			const members = await db("profile_chat_room")
 				.insert(
 					profileIds.map((id) => ({
 						profile_id: id,
@@ -86,6 +86,7 @@ class ChatRoomDAO {
 		}
 	}
 
+	//  TODO: Return a paginated response
 	async getProfileChatRooms(profile_id: number) {
 		// 1a. Query ChatRooms
 		const chatRooms = await db("chat_rooms")
@@ -99,6 +100,19 @@ class ChatRoomDAO {
 			.where("profile_chat_room.profile_id", profile_id);
 
 		return chatRooms;
+	}
+
+	async updateGroupChatName(room_id: number, name: string) {
+		// 1. Update groupChat query
+		const groupChat = (
+			await db("group_chats")
+				.update({ name })
+				.where({ room_id })
+				.returning("*")
+		)[0];
+
+		// 2. return groupChat
+		return groupChat;
 	}
 }
 
