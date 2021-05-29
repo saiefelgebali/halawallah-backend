@@ -3,23 +3,22 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
 	return await knex.schema
 
+		.createTable("chat_rooms", (table) => {
+			table.increments("room_id");
+		})
+
 		.createTable("group_chats", (table) => {
-			table.increments("group_id");
+			table
+				.integer("room_id")
+				.references("room_id")
+				.inTable("chat_rooms")
+				.onDelete("CASCADE")
+				.primary();
 			table.string("name");
 			table.string("image");
 		})
 
-		.createTable("chat_rooms", (table) => {
-			table.increments("room_id");
-			table
-				.integer("group_id")
-				.references("group_id")
-				.inTable("group_chats")
-				.onDelete("CASCADE");
-		})
-
 		.createTable("profile_chat_room", (table) => {
-			table.increments("id");
 			table
 				.integer("profile_id")
 				.references("profile_id")
@@ -30,6 +29,7 @@ export async function up(knex: Knex): Promise<void> {
 				.references("room_id")
 				.inTable("chat_rooms")
 				.onDelete("CASCADE");
+			table.primary(["profile_id", "room_id"]);
 		})
 
 		.createTable("messages", (table) => {
@@ -50,8 +50,8 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
 	return knex.schema
-		.dropTable("group_chats")
-		.dropTable("chat_rooms")
+		.dropTable("messages")
 		.dropTable("profile_chat_room")
-		.dropTable("messages");
+		.dropTable("group_chats")
+		.dropTable("chat_rooms");
 }
