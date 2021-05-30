@@ -1,6 +1,7 @@
+import http from "http";
 import { Application } from "express";
 import { Server } from "socket.io";
-import http from "http";
+import setupChatApp from "./chat-app";
 
 export default function createSocketServer(app: Application) {
 	// Create a new http server instance
@@ -10,14 +11,12 @@ export default function createSocketServer(app: Application) {
 	// Initialize socket io on httpServer
 	const io = new Server(httpServer, {
 		cors: {
-			origin: "*",
+			origin: ["http://localhost:5500"],
 		},
 	});
 
 	// Apply socket applications
-	io.on("connection", (socket) => {
-		io.emit("welcome", socket.id);
-	});
+	setupChatApp(io);
 
 	return httpServer;
 }

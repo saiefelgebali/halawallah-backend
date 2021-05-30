@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-
-interface AuthUser {
-	id: number;
-	username: string;
-}
+import { verifyAccessToken } from "./tokens";
+import AuthUser from "./AuthUser.interface";
 
 declare global {
 	namespace Express {
@@ -16,7 +12,7 @@ declare global {
 	}
 }
 
-export default function authenticateToken(
+export default async function authenticateToken(
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -32,15 +28,7 @@ export default function authenticateToken(
 	}
 
 	// Handle authenticated Requests
-	let user: AuthUser | undefined;
-	try {
-		user = jwt.verify(
-			token,
-			process.env.ACCESS_TOKEN_SECRET || "KEY"
-		) as AuthUser;
-	} catch {
-		user = undefined;
-	}
+	const user = (await verifyAccessToken(token)) as AuthUser;
 
 	// Check if user is authorized
 	// Apply user details to req object
