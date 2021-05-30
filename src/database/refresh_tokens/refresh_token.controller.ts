@@ -3,9 +3,9 @@ import { generateAccessToken } from "../../auth/tokens";
 import RefreshTokenService from "./refresh_token.service";
 
 class RefreshTokenController {
-	async createRefreshToken(args: { user_id: number; token: string }) {
-		const { user_id, token } = args;
-		return await RefreshTokenService.createRefreshToken(token, user_id);
+	async createRefreshToken(args: { username: string; token: string }) {
+		const { username, token } = args;
+		return await RefreshTokenService.createRefreshToken(token, username);
 	}
 
 	async getNewAccessTokenFromRefreshToken(req: Request, res: Response) {
@@ -21,7 +21,7 @@ class RefreshTokenController {
 		}
 
 		// Try to get user information from refreshToken
-		// user contains - username, user_id
+		// user contains - username
 		const user = await RefreshTokenService.getTokenUser(refreshToken);
 
 		// Handle invalid refresh token
@@ -33,7 +33,6 @@ class RefreshTokenController {
 		// Token is valid
 		// Send a new access token with user information
 		const accessToken = generateAccessToken({
-			id: user.user_id,
 			username: user.username,
 		});
 

@@ -10,40 +10,22 @@ class ProfileDAO {
 		return (
 			await db("profiles")
 				.insert({
+					username: user.username,
 					display: user.username,
-					user_id: user.user_id,
 				})
 				.returning("*")
 		)[0];
 	}
 
-	async getProfile(id: number) {
-		return await db("profiles")
-			.select("*")
-			.where({ profile_id: id })
-			.first();
+	async getProfile(username: string) {
+		return await db("profiles").select("*").where({ username }).first();
 	}
 
-	async getProfileByUsername(username: string) {
-		return await db("profiles")
-			.select("profiles.*")
-			.join("users", "profiles.user_id", "users.user_id")
-			.where("users.username", username)
-			.first();
-	}
-
-	async getProfileIDFromUserID(user_id: number) {
-		return await db("profiles")
-			.select("profile_id")
-			.where({ user_id })
-			.first();
-	}
-
-	async followProfile(profile_id: number, following_id: number) {
+	async followProfile(profile_username: string, following_username: string) {
 		// Check if user already follows target
 		const following = await db("profile_following")
 			.select("*")
-			.where({ profile_id, following_id });
+			.where({ profile_username, following_username });
 
 		// Consider whether or not already following
 		const isFollowing = following.length ? true : false;
@@ -52,49 +34,53 @@ class ProfileDAO {
 		if (isFollowing) {
 			await db("profile_following")
 				.delete()
-				.where({ profile_id, following_id });
+				.where({ profile_username, following_username });
 		}
 
 		// If not already following - insert new row
 		else if (!isFollowing) {
-			await db("profile_following").insert({ profile_id, following_id });
+			await db("profile_following").insert({
+				profile_username,
+				following_username,
+			});
 		}
 
 		// Return new profile details
 		return await db("profiles")
 			.select("*")
-			.where({ profile_id: following_id })
+			.where({ username: following_username })
 			.first();
 	}
 
-	async checkFollowing(profile_id: number, following_id: number) {
+	async checkFollowing(profile_username: string, following_username: string) {
 		// Check if user already follows target
 		const following = await db("profile_following")
 			.select("*")
-			.where({ profile_id, following_id });
+			.where({ profile_username, following_username });
 
 		// Consider whether or not already following
 		return following.length ? true : false;
 	}
 
-	async getProfileFollowing(id: number, offset: number, limit: number) {
+	async getProfileFollowing(username: string, offset: number, limit: number) {
 		// Gets a paginated response of the profiles a user follows
 		limit = limit || 0;
 		offset = offset || 0;
+
 		const data = await db("profile_following")
 			.join(
 				"profiles",
-				"profile_following.following_id",
-				"profiles.profile_id"
+				"profile_following.following_username",
+				"profiles.username"
 			)
 			.select("*")
-			.where("profile_following.profile_id", id)
+			.where("profile_following.username", username)
 			.orderBy("profile_following.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
 
 		const agg = (
-			await db("profile_following").where("profile_id", id).count()
+			await db("profile_following").where("username", username).count()
 		)[0].count;
 
 		const count = typeof agg === "number" ? agg : parseInt(agg);
@@ -109,16 +95,16 @@ class ProfileDAO {
 		};
 	}
 
-	async updatePfp(profile_id: number, pfp: string) {
+	async updatePfp(username: string, pfp: string) {
 		return (
 			await db("profiles")
 				.update({ pfp })
-				.where({ profile_id })
+				.where({ username })
 				.returning("*")
 		)[0];
 	}
 
-	async updateProfile(profile_id: number, display: string, bio: string) {
+	async updateProfile(username: string, display: string, bio: string) {
 		// Cancel query if none provided
 		if (!display && !bio) {
 			return null;
@@ -128,7 +114,7 @@ class ProfileDAO {
 		return (
 			await db("profiles")
 				.update({ display, bio })
-				.where({ profile_id })
+				.where({ username })
 				.returning("*")
 		)[0];
 	}
@@ -141,19 +127,16 @@ class ProfileDAO {
 
 		// Get data
 		const data = await db("profiles")
-			.select("profiles.*", "users.username")
-			.innerJoin("users", "users.user_id", "profiles.user_id")
-
+			.select("*")
 			// Search for similar display names
 			.where(
 				db.raw('LOWER("display") like ?', `%${query.toLowerCase()}%`)
 			)
-
 			// Search for similar usernames
 			.orWhere(
 				db.raw('LOWER("username") like ?', `%${query.toLowerCase()}%`)
 			)
-			.orderBy("profiles.created_at", "desc")
+			.orderBy("created_at", "desc")
 			.offset(offset)
 			.limit(limit);
 
@@ -161,7 +144,6 @@ class ProfileDAO {
 		const count = (
 			await db("profiles")
 				.count()
-				.innerJoin("users", "users.user_id", "profiles.user_id")
 				.where(
 					db.raw(
 						'LOWER("display") like ?',

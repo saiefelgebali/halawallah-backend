@@ -32,9 +32,8 @@ export default async function authenticateToken(
 
 	// Check if user is authorized
 	// Apply user details to req object
-	if (user && user.id) {
+	if (user && user.username) {
 		req.user = {
-			id: user.id,
 			username: user.username,
 		};
 	}

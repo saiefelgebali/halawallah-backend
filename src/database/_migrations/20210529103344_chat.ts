@@ -20,8 +20,8 @@ export async function up(knex: Knex): Promise<void> {
 
 		.createTable("profile_chat_room", (table) => {
 			table
-				.integer("profile_id")
-				.references("profile_id")
+				.string("username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table
@@ -29,15 +29,15 @@ export async function up(knex: Knex): Promise<void> {
 				.references("room_id")
 				.inTable("chat_rooms")
 				.onDelete("CASCADE");
-			table.primary(["profile_id", "room_id"]);
+			table.primary(["username", "room_id"]);
 		})
 
 		.createTable("messages", (table) => {
 			table.increments("message_id");
 			table.text("text");
 			table
-				.integer("profile_id")
-				.references("profile_id")
+				.string("username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table

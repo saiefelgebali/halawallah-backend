@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import { Application } from "express";
 import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
@@ -10,6 +10,10 @@ export const apolloServer = new ApolloServer({
 
 	// Apply authentication context to graphql requests
 	context: ({ req }) => {
+		// Block unauthorized users
+		if (!req.user) throw new AuthenticationError("You are unauthenticated");
+
+		// Pass user info in context
 		return { user: req.user, url: getBaseUrl(req) };
 	},
 });

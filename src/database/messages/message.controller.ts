@@ -2,30 +2,20 @@ import { ApolloError } from "apollo-server-errors";
 import profileService from "../profiles/profile.service";
 import MessageService from "./message.service";
 
-const unauthMessage = new ApolloError("Unauthorized Access");
-
 class MessageController {
 	/**
 	 * Apollo GraphQL controller for messages
 	 */
 
 	async createMessage(parent: any, args: any, context: any) {
-		// 0. Authorize request
-		if (!context?.user?.id) return unauthMessage;
-
-		// 1. Get context profile
-		const profileId = await profileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
-		// 2. Make request to db
+		// 1. Make request to db
 		const message = await MessageService.createMessage(
-			profileId,
+			context.user.username,
 			args.room_id,
 			args.text
 		);
 
-		// 3. Return new message
+		// 2. Return new message
 		return message;
 	}
 
@@ -39,16 +29,11 @@ class MessageController {
 	}
 
 	async deleteMessage(parent: any, args: any, context: any) {
-		// 0. Authorize request
-		if (!context?.user?.id) return unauthMessage;
-
-		// 1. Get context profile
-		const profileId = await profileService.getProfileIDFromUserID(
-			context.user.id
+		// Return boolean if delete success
+		return await MessageService.deleteMessage(
+			args.message_id,
+			context.user.username
 		);
-
-		// 2. Return boolean if delete success
-		return await MessageService.deleteMessage(args.message_id, profileId);
 	}
 }
 

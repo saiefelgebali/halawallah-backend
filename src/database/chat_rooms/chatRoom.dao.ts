@@ -5,7 +5,7 @@ class ChatRoomDAO {
 	 * Access data primarily relating to the "chat_rooms" table
 	 */
 
-	async createChatRoom(profileIds: number[]) {
+	async createChatRoom(profileUsernames: string[]) {
 		// 1a. Create a new chat room
 		const chatRoom = (
 			await db("chat_rooms")
@@ -14,12 +14,12 @@ class ChatRoomDAO {
 		)[0];
 
 		// 1b. If more than 2 profiles, link a Group Chat to Chat Room
-		if (profileIds.length > 2) {
+		if (profileUsernames.length > 2) {
 			await this.createGroupChat(chatRoom.room_id);
 		}
 
 		// 2. Link specified profileIds to that room
-		await this.addMembersToChatRoom(chatRoom.room_id, profileIds);
+		await this.addMembersToChatRoom(chatRoom.room_id, profileUsernames);
 
 		// 3. Return chat room object
 		return chatRoom;
@@ -59,8 +59,8 @@ class ChatRoomDAO {
 			// 1b. Join "profiles" with "profile_chat_room"
 			.join(
 				"profile_chat_room",
-				"profile_chat_room.profile_id",
-				"profiles.profile_id"
+				"profile_chat_room.username",
+				"profiles.username"
 			)
 			.select("profiles.*")
 			.where("profile_chat_room.room_id", room_id);
@@ -69,14 +69,14 @@ class ChatRoomDAO {
 		return members;
 	}
 
-	async addMembersToChatRoom(room_id: number, profileIds: number[]) {
+	async addMembersToChatRoom(room_id: number, profileUsernames: string[]) {
 		// 1. Create new profile <---> chat_room connections
 		try {
 			return (
 				await db("profile_chat_room")
 					.insert(
-						profileIds.map((id) => ({
-							profile_id: id,
+						profileUsernames.map((username) => ({
+							username,
 							room_id,
 						}))
 					)
@@ -88,7 +88,7 @@ class ChatRoomDAO {
 	}
 
 	async getProfileChatRooms(
-		profile_id: number,
+		username: string,
 		offset: number = 0,
 		limit: number = 0
 	) {
@@ -102,7 +102,7 @@ class ChatRoomDAO {
 					"profile_chat_room.room_id",
 					"chat_rooms.room_id"
 				)
-				.where("profile_chat_room.profile_id", profile_id)
+				.where("profile_chat_room.username", username)
 				.count()
 		)[0]?.count;
 
@@ -118,7 +118,7 @@ class ChatRoomDAO {
 				"chat_rooms.room_id"
 			)
 			.select("*")
-			.where("profile_chat_room.profile_id", profile_id)
+			.where("profile_chat_room.username", username)
 			.offset(offset)
 			.limit(limit);
 

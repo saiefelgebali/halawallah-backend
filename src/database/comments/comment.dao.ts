@@ -6,13 +6,13 @@ class CommentDAO {
 	 * Contains relevant database operations relating to the comments table
 	 */
 
-	async createComment(text: string, profile_id: number, post_id: number) {
+	async createComment(text: string, username: string, post_id: number) {
 		// Create & return a new comment
 		return (
 			await db("comments")
 				.insert({
 					text,
-					profile_id,
+					username,
 					post_id,
 				})
 				.returning("*")

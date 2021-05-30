@@ -6,13 +6,13 @@ class PostDAO {
 	 * Contains relevant database operations for a Post instance
 	 */
 
-	async createPost(profile_id: number, image: string, caption: string) {
+	async createPost(username: string, image: string, caption: string) {
 		// Create a new post
 		// Return new post details
 		return (
 			await db("posts")
 				.insert({
-					profile_id,
+					username,
 					image,
 					caption,
 				})
@@ -20,41 +20,42 @@ class PostDAO {
 		)[0];
 	}
 
-	async getProfileFeed(profile_id: number, offset: number, limit: number) {
+	async getProfileFeed(
+		username: string,
+		offset: number = 0,
+		limit: number = 0
+	) {
 		// Gets a paginated response of the posts belonging to a profile
-		limit = limit || 0;
-		offset = offset || 0;
+		console.log(username, offset, limit);
 
 		// Get post data
 		const data = await db("posts")
 			.select("posts.*")
-			.innerJoin("profiles", "posts.profile_id", "profiles.profile_id")
-			.innerJoin(
+			.innerJoin("profiles", "posts.username", "profiles.username")
+			.fullOuterJoin(
 				"profile_following",
-				"posts.profile_id",
-				"profile_following.following_id"
+				"posts.username",
+				"profile_following.following_username"
 			)
-			.where("profile_following.profile_id", profile_id)
-			.orWhere("posts.profile_id", profile_id)
+			.where("profile_following.profile_username", username)
+			.orWhere("posts.username", username)
 			.orderBy("posts.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
 
+		console.log(data);
+
 		// Get pagination meta data
 		const agg = (
 			await db("posts")
-				.innerJoin(
-					"profiles",
-					"posts.profile_id",
-					"profiles.profile_id"
-				)
+				.innerJoin("profiles", "posts.username", "profiles.username")
 				.innerJoin(
 					"profile_following",
-					"posts.profile_id",
-					"profile_following.following_id"
+					"posts.username",
+					"profile_following.following_username"
 				)
-				.where("profile_following.profile_id", profile_id)
-				.orWhere("posts.profile_id", profile_id)
+				.where("profile_following.profile_username", username)
+				.orWhere("posts.username", username)
 				.count()
 		)[0].count;
 
@@ -70,22 +71,21 @@ class PostDAO {
 		};
 	}
 
-	async getPostsByProfile(profile_id: number, offset: number, limit: number) {
+	async getPostsByProfile(username: string, offset: number, limit: number) {
 		// Gets a paginated response of the posts belonging to a profile
 		limit = limit || 0;
 		offset = offset || 0;
 		const data = await db("posts")
-			.join("profiles", "posts.profile_id", "profiles.profile_id")
+			.join("profiles", "posts.username", "profiles.username")
 			.select("posts.*")
-			.where("posts.profile_id", profile_id)
+			.where("posts.username", username)
 			.orderBy("posts.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
 
 		// Get pagination meta data
-		const agg = (
-			await db("posts").where("profile_id", profile_id).count()
-		)[0].count;
+		const agg = (await db("posts").where("username", username).count())[0]
+			.count;
 
 		const count = typeof agg === "number" ? agg : parseInt(agg);
 

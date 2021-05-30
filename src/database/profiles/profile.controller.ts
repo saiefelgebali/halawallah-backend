@@ -9,81 +9,39 @@ class ProfileController {
 	 * @returns Queried results
 	 */
 
-	async getProfileByUsername(parent: any, args: any, context: any) {
-		return await ProfileService.getProfileByUsername(args.username);
-	}
+	async getProfile(parent: any, args: any, context: any) {
+		// Get username from either args or parent
+		const username = args.username || parent.username;
 
-	async getProfileById(parent: any, args: any, context: any) {
-		// Get profile_id from either args or parent
-		let profile_id;
-
-		// Apply if profile_id is found in args
-		if (args && args.profile_id) {
-			profile_id = args.profile_id;
-		}
-
-		// Apply if profile_id is found in parent
-		else if (parent && parent.profile_id) {
-			profile_id = parent.profile_id;
-		}
-
-		// Apply if profile_id is in context
-		else if (context && context.user.id) {
-			profile_id = await ProfileService.getProfileIDFromUserID(
-				context.user.id
-			);
-		}
-
-		return await ProfileService.getProfile(profile_id);
+		return await ProfileService.getProfile(username);
 	}
 
 	async followProfile(parent: any, args: any, context: any) {
-		// Unauthenticated users return null
-		if (!context.user) {
-			return null;
-		}
-
-		// Get respective profileId
-		const profileId = await ProfileService.getProfileIDFromUserID(
-			context.user.id
+		return await ProfileService.followProfile(
+			context.user.username,
+			args.following_username
 		);
-
-		// Authenticated user can make a follow
-		return await ProfileService.followProfile(profileId, args.following_id);
 	}
 
-	async getProfileFollowingById(parent: any, args: any) {
+	async getProfileFollowing(parent: any, args: any) {
 		return await ProfileService.getProfileFollowing(
-			parent.profile_id,
+			parent.username,
 			args.offset,
 			args.limit
 		);
 	}
 
 	async checkFollowing(parent: any, args: any, context: any) {
-		// If user is authenticated - return user's profile
-		if (context.user) {
-			const profile_id = await ProfileService.getProfileIDFromUserID(
-				context.user.id
-			);
-			return ProfileService.checkFollowing(profile_id, parent.profile_id);
-		}
-
-		// If not authenticated return error
-		return null;
+		// Return user's profile
+		return ProfileService.checkFollowing(
+			context.user.username,
+			parent.username
+		);
 	}
 
 	async getMyProfile(parent: any, args: any, context: any) {
-		// If user is authenticated - return user's profile
-		if (context.user) {
-			const profile_id = await ProfileService.getProfileIDFromUserID(
-				context.user.id
-			);
-			return ProfileService.getProfile(profile_id);
-		}
-
-		// Otherwise return guest profile
-		return null;
+		// Return requesting user's profile
+		return ProfileService.getProfile(context.user.username);
 	}
 
 	async uploadPfp(req: Request, res: Response) {
@@ -92,36 +50,28 @@ class ProfileController {
 			return res.status(403).send("Unauthenticated request");
 		}
 
-		// Process pfp image
-		const pfp = await processRequestImage("pfp", req);
+		try {
+			// Process pfp image
+			const pfp = await processRequestImage("pfp", req);
 
-		// Get profile id
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			req.user.id
-		);
+			// Upload pfp to db
+			const result = await ProfileService.uploadPfp(
+				req.user.username,
+				pfp
+			);
 
-		const result = await ProfileService.uploadPfp(profile_id, pfp || "");
-
-		// Return new profile details in json format
-		res.json(result);
+			// Return new profile details in json format
+			res.json(result);
+		} catch (error) {
+			// Internal server error
+			res.sendStatus(500).json(error);
+		}
 	}
 
 	async updateProfile(parent: any, args: any, context: any) {
-		// Authenticate user
-		if (!context.user) {
-			return new ApolloError(
-				"You must be authenticated to updadte this profile"
-			);
-		}
-
-		// Get profile id
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
 		// Return updated profile
 		return await ProfileService.updateProfile(
-			profile_id,
+			context.user.username,
 			args.display,
 			args.bio
 		);

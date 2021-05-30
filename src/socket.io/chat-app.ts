@@ -31,7 +31,6 @@ function setupChatApp(io: Server) {
 	io.on("connection", (socket: AuthSocket) => {
 		// Welcome socket send id and username
 		socket.emit("welcome", {
-			id: socket.user?.id,
 			username: socket.user?.username,
 		});
 

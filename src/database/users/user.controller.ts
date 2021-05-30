@@ -1,4 +1,5 @@
 import { ApolloError } from "apollo-server-errors";
+import { Request, Response } from "express";
 import ProfileService from "../profiles/profile.service";
 import RefreshTokenService from "../refresh_tokens/refresh_token.service";
 import UserService from "./user.service";
@@ -9,16 +10,10 @@ class UserController {
 	 * @returns Queried results
 	 */
 
-	async loginUser(parent: any, args: any, context: any) {
+	async loginUser(req: Request, res: Response) {
 		// Return new refreshToken & an accessToken
-		const res = await UserService.loginUser(args);
-
-		// Handle error
-		if (res.error) {
-			return new ApolloError(res.error);
-		}
-
-		return res;
+		const loginTokens = await UserService.loginUser(req.body);
+		return res.json(loginTokens);
 	}
 
 	async logoutUser(parent: any, args: any, context: any) {
@@ -27,28 +22,29 @@ class UserController {
 		return await RefreshTokenService.deleteRefreshToken(args.token);
 	}
 
-	async getUserById(parent: any, args: any) {
-		return await UserService.getUser(args.user_id);
+	async getUser(parent: any, args: any) {
+		return await UserService.getUser(args.username);
 	}
 
-	async createUser(parent: any, args: any) {
-		const user = await UserService.createUser(args);
+	async createUser(req: Request, res: Response) {
+		const user = await UserService.createUser(req.body);
 
 		// User was created successfully
-		if (user.user_id) {
+		if (user.username) {
 			// Create a new profile automatically linked to new user
-			const profile = await ProfileService.createProfile(user);
-			return profile;
+			return res.json(await ProfileService.createProfile(user));
 		}
 
 		// Check if username unique constraint is violated
 		else if (user.constraint === "users_username_unique") {
-			return new ApolloError("A user with that username already exists");
+			return res.json(
+				new Error("A user with that username already exists")
+			);
 		}
 
 		// Server error occured
 		else {
-			return new ApolloError("Server could not handle request");
+			return res.json(new Error("Server could not handle request"));
 		}
 	}
 }

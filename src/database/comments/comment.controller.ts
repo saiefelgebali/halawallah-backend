@@ -1,10 +1,9 @@
 import { ApolloError } from "apollo-server-errors";
-import ProfileService from "../profiles/profile.service";
 import CommentService from "./comment.service";
 
 interface CreateCommentArgs {
 	text: string;
-	profile_id: number;
+	username: string;
 	post_id: number;
 }
 
@@ -15,20 +14,10 @@ class CommentController {
 	 */
 
 	async createComment(parent: any, args: CreateCommentArgs, context: any) {
-		// Skip unauthorized requests
-		if (!context.user) {
-			return new ApolloError("Unauthenticated requst");
-		}
-
-		// Get profile id
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
 		// Return new comment
 		return await CommentService.createComment({
 			post_id: args.post_id,
-			profile_id,
+			username: context.user.username,
 			text: args.text,
 		});
 	}
@@ -52,19 +41,6 @@ class CommentController {
 	}
 
 	async deleteCommentById(parent: any, args: any, context: any) {
-		// Try to access user from context
-		const user = context.user;
-
-		// Unauthenticated request
-		if (!user) {
-			return new ApolloError("Unauthenticated request");
-		}
-
-		// Get profile details
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
 		// Get comment by id
 		const comment = await CommentService.getCommentById(args.comment_id);
 
@@ -73,15 +49,9 @@ class CommentController {
 			return new ApolloError("Comment does not exist");
 		}
 
-		console.log(comment);
-		console.log(profile_id);
-
 		// Ensure context user matches comment profile
-		if (comment.profile_id === profile_id) {
-			const result = await CommentService.deleteCommentById(
-				comment.comment_id
-			);
-			return result;
+		if (comment.username === context.user.username) {
+			return await CommentService.deleteCommentById(comment.comment_id);
 		}
 
 		// Handle error

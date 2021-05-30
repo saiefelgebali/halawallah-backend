@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 // Handle verifying tokens
 export const verifyTokenView = (req: Request, res: Response) => {
 	// Return status 200 for a valid access token
-	if (req.user && req.user.id) {
+	if (req.user && req.user.username) {
 		return res.sendStatus(200);
 	}
 

@@ -4,7 +4,6 @@ export async function up(knex: Knex): Promise<void> {
 	return await knex.schema
 
 		.createTable("users", (table) => {
-			table.increments("user_id");
 			table.string("username").notNullable().unique();
 			table.string("password").notNullable();
 			table.boolean("admin").notNullable().defaultTo(false);
@@ -12,28 +11,28 @@ export async function up(knex: Knex): Promise<void> {
 		})
 
 		.createTable("profiles", (table) => {
-			table.increments("profile_id");
+			table
+				.string("username")
+				.references("username")
+				.inTable("users")
+				.onDelete("CASCADE")
+				.primary();
 			table.string("display");
 			table.text("bio");
 			table.string("pfp");
-			table
-				.integer("user_id")
-				.references("user_id")
-				.inTable("users")
-				.onDelete("CASCADE");
 			table.timestamps(true, true);
 		})
 
 		.createTable("profile_following", (table) => {
 			table.increments("id");
 			table
-				.integer("profile_id")
-				.references("profile_id")
+				.string("profile_username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table
-				.integer("following_id")
-				.references("profile_id")
+				.string("following_username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table.timestamps(true, true);
@@ -44,8 +43,8 @@ export async function up(knex: Knex): Promise<void> {
 			table.string("image");
 			table.text("caption");
 			table
-				.integer("profile_id")
-				.references("profile_id")
+				.string("username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table.timestamps(true, true);
@@ -55,8 +54,8 @@ export async function up(knex: Knex): Promise<void> {
 			table.increments("comment_id");
 			table.text("text");
 			table
-				.integer("profile_id")
-				.references("profile_id")
+				.string("username")
+				.references("username")
 				.inTable("profiles")
 				.onDelete("CASCADE");
 			table
@@ -70,8 +69,8 @@ export async function up(knex: Knex): Promise<void> {
 		.createTable("refresh_tokens", (table) => {
 			table.string("token").notNullable().primary();
 			table
-				.integer("user_id")
-				.references("user_id")
+				.string("username")
+				.references("username")
 				.inTable("users")
 				.onDelete("CASCADE");
 			table.timestamps(true, true);
@@ -82,8 +81,8 @@ export async function up(knex: Knex): Promise<void> {
 			table.integer("type").defaultTo(0);
 			table.text("text");
 			table
-				.integer("user_id")
-				.references("user_id")
+				.string("username")
+				.references("username")
 				.inTable("users")
 				.onDelete("CASCADE");
 			table.timestamps(true, true);

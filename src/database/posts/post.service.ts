@@ -1,4 +1,3 @@
-import ProfileService from "../profiles/profile.service";
 import PostDAO from "./post.dao";
 
 class PostService {
@@ -6,19 +5,16 @@ class PostService {
 	 * Service layer
 	 * Handles data connecting between the Controller and the Data Access Object (DAO)
 	 */
-	async createPost(user_id: number, image: string, caption: string) {
-		// Get profile_id from user_id
-		const profile_id = await ProfileService.getProfileIDFromUserID(user_id);
-
-		return await PostDAO.createPost(profile_id, image, caption);
+	async createPost(username: string, image: string, caption: string) {
+		return await PostDAO.createPost(username, image, caption);
 	}
 
-	getPostsByProfile(profile_id: number, offset: number, limit: number) {
-		return PostDAO.getPostsByProfile(profile_id, offset, limit);
+	getPostsByProfile(username: string, offset: number, limit: number) {
+		return PostDAO.getPostsByProfile(username, offset, limit);
 	}
 
-	getProfileFeed(profileId: number, offset: number, limit: number) {
-		return PostDAO.getProfileFeed(profileId, offset, limit);
+	getProfileFeed(username: string, offset: number, limit: number) {
+		return PostDAO.getProfileFeed(username, offset, limit);
 	}
 
 	getPostById(post_id: number) {

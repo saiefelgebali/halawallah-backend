@@ -19,7 +19,6 @@ export async function processRequestImage(type: string, req: Request) {
 		// Return new filename if successful
 		return filename;
 	} catch {
-		console.log(`Error while processing image`);
-		return null;
+		throw new Error(`Error while processing image`);
 	}
 }

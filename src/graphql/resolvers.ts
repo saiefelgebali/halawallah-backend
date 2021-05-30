@@ -8,10 +8,7 @@ import MessageController from "../database/messages/message.controller";
 
 const resolvers = {
 	Profile: {
-		user: (parent: any, args: any) => {
-			return UserService.getUser(parent.user_id);
-		},
-		following: ProfileController.getProfileFollowingById,
+		following: ProfileController.getProfileFollowing,
 		posts: PostController.getPostsByProfile,
 		pfp: (parent: any, args: any, context: any) => {
 			// Handle empty pfp
@@ -24,7 +21,7 @@ const resolvers = {
 	},
 
 	Post: {
-		profile: ProfileController.getProfileById,
+		profile: ProfileController.getProfile,
 		comments: CommentController.getPostComments,
 		image: (parent: any, args: any, context: any) => {
 			// Handle empty image
@@ -40,7 +37,7 @@ const resolvers = {
 	},
 
 	Comment: {
-		profile: ProfileController.getProfileById,
+		profile: ProfileController.getProfile,
 	},
 
 	ChatRoom: {
@@ -51,22 +48,20 @@ const resolvers = {
 
 	Message: {
 		room: ChatRoomsController.getChatRoom,
-		profile: ProfileController.getProfileById,
+		profile: ProfileController.getProfile,
 	},
 
 	// [ROOT QUERY]
 
 	Query: {
 		// [PROFILE]
-		getUserById: UserController.getUserById,
-		getProfileById: ProfileController.getProfileById,
 		me: ProfileController.getMyProfile,
-		getProfileByUsername: ProfileController.getProfileByUsername,
+		getProfile: ProfileController.getProfile,
 		searchProfile: ProfileController.searchProfile,
 
 		// [POST]
-		getPostById: PostController.getPostsById,
-		getPostsByUsername: PostController.getPostsByProfileUsername,
+		getPostById: PostController.getPostById,
+		getPostsByProfile: PostController.getPostsByProfile,
 		getCommentsByPost: CommentController.getPostComments,
 		feed: PostController.getMyFeed,
 

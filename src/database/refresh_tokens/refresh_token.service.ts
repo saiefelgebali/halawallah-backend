@@ -1,8 +1,8 @@
 import RefreshTokenDAO from "./refresh_token.dao";
 
 class RefreshTokenService {
-	createRefreshToken(token: string, user_id: number) {
-		return RefreshTokenDAO.createRefreshToken(token, user_id);
+	createRefreshToken(token: string, username: string) {
+		return RefreshTokenDAO.createRefreshToken(token, username);
 	}
 
 	deleteRefreshToken(token: string) {

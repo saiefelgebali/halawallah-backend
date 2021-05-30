@@ -2,7 +2,7 @@ import CommentDAO from "./comment.dao";
 
 interface CreateCommentArgs {
 	text: string;
-	profile_id: number;
+	username: string;
 	post_id: number;
 }
 
@@ -19,11 +19,7 @@ class CommentService {
 	 */
 
 	createComment(args: CreateCommentArgs) {
-		return CommentDAO.createComment(
-			args.text,
-			args.profile_id,
-			args.post_id
-		);
+		return CommentDAO.createComment(args.text, args.username, args.post_id);
 	}
 
 	getComments(args: CommentsPaginatedArgs) {

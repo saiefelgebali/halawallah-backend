@@ -1,5 +1,4 @@
 import { ApolloError } from "apollo-server-errors";
-import profileService from "../profiles/profile.service";
 import ChatRoomService from "./chatRoom.service";
 
 const unauthMessage = new ApolloError("Unauthorized Access");
@@ -10,20 +9,12 @@ class ChatRoomController {
 	 */
 
 	async createChatRoom(parent: any, args: any, context: any) {
-		// 0. Authorize request
-		if (!context?.user?.id) return unauthMessage;
-
-		// 1. Get context profile
-		const profileId = await profileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
-		// 2. Make request to db - including requesting profile
+		// 1. Make request to db - including requesting profile
 		const chatRoom = await ChatRoomService.createChatRoom([
-			...new Set([profileId, ...args.profileIds]),
+			...new Set([context.user.username, ...args.profileIds]),
 		]);
 
-		// 3. Return new chatRoom details
+		// 2. Return new chatRoom details
 		return chatRoom;
 	}
 
@@ -51,22 +42,14 @@ class ChatRoomController {
 	}
 
 	async getProfileChatRooms(parent: any, args: any, context: any) {
-		// 0. Authorize request
-		if (!context?.user?.id) return unauthMessage;
-
-		// 1. Get context profile
-		const profileId = await profileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
-		// 2. Make request to db
+		// 1. Make request to db
 		const chatRooms = await ChatRoomService.getProfileChatRooms(
-			profileId,
+			context.user.username,
 			args.offset,
 			args.limit
 		);
 
-		// 3. Return new paginated chatRoom response
+		// 2. Return new paginated chatRoom response
 		return chatRooms;
 	}
 
@@ -74,7 +57,7 @@ class ChatRoomController {
 		// 1. Make update query
 		const chatRoom = await ChatRoomService.addMembersToChatRoom(
 			args.room_id,
-			args.profileIds
+			args.profileUsernames
 		);
 
 		// 2. Return chatRoom

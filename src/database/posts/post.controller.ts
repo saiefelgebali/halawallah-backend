@@ -16,20 +16,25 @@ class PostController {
 			return res.status(403).send("Unauthenticated request");
 		}
 
-		// Process image
-		const image = await processRequestImage("post", req);
+		try {
+			// Process image
+			const image = await processRequestImage("post", req);
 
-		// Return new post in json format
-		res.json(
-			await PostService.createPost(
-				req.user.id,
-				image || "",
-				req.body.caption
-			)
-		);
+			// Return new post in json format
+			res.json(
+				await PostService.createPost(
+					req.user.username,
+					image,
+					req.body.caption
+				)
+			);
+		} catch (error) {
+			// Internal server error
+			res.sendStatus(500).json(error);
+		}
 	}
 
-	async getPostsById(parent: any, args: any) {
+	async getPostById(parent: any, args: any) {
 		// Return specific post
 		return await PostService.getPostById(args.post_id);
 	}
@@ -37,65 +42,22 @@ class PostController {
 	async getPostsByProfile(parent: any, args: any) {
 		// Return paginated response of posts
 		return await PostService.getPostsByProfile(
-			args.profile_id | parent.profile_id,
-			args.offset,
-			args.limit
-		);
-	}
-
-	async getPostsByProfileUsername(parent: any, args: any) {
-		// Get profile id from username
-		const profile = await ProfileService.getProfileByUsername(
-			args.username
-		);
-
-		if (!profile) {
-			return new ApolloError("User does not exist");
-		}
-
-		// Return paginated response of posts from username
-		return await PostService.getPostsByProfile(
-			profile.profile_id,
+			args.username || parent.username,
 			args.offset,
 			args.limit
 		);
 	}
 
 	async getMyFeed(parent: any, args: any, context: any) {
-		// Try to access user_id from context
-		const user = context.user;
-
-		// Unauthenticated request
-		if (!user) {
-			return null;
-		}
-
-		// Authenticated request
-		// Get relevant profile
-		const profileId = await ProfileService.getProfileIDFromUserID(user.id);
-
 		// Return paginated posts response
 		return await PostService.getProfileFeed(
-			profileId,
+			context.user.username,
 			args.offset,
 			args.limit
 		);
 	}
 
 	async deletePostById(parent: any, args: any, context: any) {
-		// Try to access user from context
-		const user = context.user;
-
-		// Unauthenticated request
-		if (!user) {
-			return new ApolloError("Unauthenticated request");
-		}
-
-		// Get profile details
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
 		// Get post by id
 		const post = await PostService.getPostById(args.post_id);
 
@@ -105,7 +67,7 @@ class PostController {
 		}
 
 		// Ensure context user matches post profile
-		if (post.profile_id === profile_id) {
+		if (post.username === context.user.username) {
 			const result = await PostService.deletePostById(post.post_id);
 			return result;
 		}
@@ -117,22 +79,11 @@ class PostController {
 	}
 
 	async updatePostById(parent: any, args: any, context: any) {
-		// Authenticate user
-		if (!context.user) {
-			return new ApolloError(
-				"You must be authenticated to update this post"
-			);
-		}
-
-		// Get profile id
-		const profile_id = await ProfileService.getProfileIDFromUserID(
-			context.user.id
-		);
-
 		// Ensure post's profile matches context profile
 		const post = await PostService.getPostById(args.post_id);
 
-		if (post.profile_id !== profile_id) {
+		// Check if requesting user is authorized to delete post
+		if (post.username !== context.user.username) {
 			return new ApolloError(
 				"You do not have permission to update this post"
 			);

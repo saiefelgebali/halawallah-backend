@@ -5,12 +5,12 @@ class MesssageDAO {
 	 * Access data primarily relating to the "messages" table
 	 */
 
-	async createMessage(profile_id: number, room_id: number, text: string) {
+	async createMessage(username: string, room_id: number, text: string) {
 		// 1. Insert values into "messages"
 		const message = (
 			await db("messages")
 				.insert({
-					profile_id,
+					username,
 					room_id,
 					text,
 				})
@@ -21,10 +21,10 @@ class MesssageDAO {
 		return message;
 	}
 
-	async deleteMessage(message_id: number, profile_id: number) {
+	async deleteMessage(message_id: number, username: string) {
 		// 1. Check if profile is authorized to delete message
 		const validReq = (
-			await db("messages").select("*").where({ message_id, profile_id })
+			await db("messages").select("*").where({ message_id, username })
 		)[0];
 
 		if (!validReq) {

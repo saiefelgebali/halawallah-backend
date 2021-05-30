@@ -3,17 +3,11 @@ import { gql } from "apollo-server-core";
 const typeDefs = gql`
 	# [Profile]
 
-	type User {
-		user_id: Int
-		username: String
-	}
-
 	type Profile {
-		profile_id: Int
+		username: String
 		display: String
 		bio: String
 		pfp: String
-		user: User
 		following(offset: Int, limit: Int): PaginatedProfiles
 		posts(offset: Int, limit: Int): PaginatedPosts
 		isFollowing: Boolean
@@ -96,9 +90,7 @@ const typeDefs = gql`
 
 	type Query {
 		# [PROFILE]
-		getUserById(user_id: Int!): User
-		getProfileByUsername(username: String!): Profile
-		getProfileById(profile_id: Int!): Profile
+		getProfile(username: String!): Profile
 		me: Profile
 		searchProfile(
 			query: String!
@@ -113,7 +105,7 @@ const typeDefs = gql`
 			offset: Int
 			limit: Int
 		): PaginatedComments
-		getPostsByUsername(
+		getPostsByProfile(
 			username: String!
 			offset: Int!
 			limit: Int!
@@ -132,7 +124,7 @@ const typeDefs = gql`
 		# [PROFILE]
 		createUser(username: String!, password: String!): Profile
 		updateProfile(display: String, bio: String): Profile
-		follow(following_id: Int!): Profile
+		follow(following_username: String!): Profile
 		login(username: String!, password: String!): LoginTokens
 		logout(token: String!): Boolean
 
@@ -143,8 +135,11 @@ const typeDefs = gql`
 		deleteComment(comment_id: Int!): Boolean
 
 		# [CHAT]
-		createChatRoom(profileIds: [Int]!): ChatRoom
-		addMembersToChatRoom(room_id: Int!, profileIds: [Int]!): ChatRoom
+		createChatRoom(profileUsernames: [String]!): ChatRoom
+		addMembersToChatRoom(
+			room_id: Int!
+			profileUsernames: [String]!
+		): ChatRoom
 		updateGroupChatName(room_id: Int!, name: String!): GroupChat
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean

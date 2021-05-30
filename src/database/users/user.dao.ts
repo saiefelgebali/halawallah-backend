@@ -30,9 +30,8 @@ class UserDAO {
 			}
 
 			// Generate tokens
-			const refreshToken = await generateRefreshToken(user.user_id);
+			const refreshToken = await generateRefreshToken(user.username);
 			const accessToken = generateAccessToken({
-				id: user.user_id,
 				username: user.username,
 			});
 
@@ -46,12 +45,8 @@ class UserDAO {
 	}
 
 	async createUser(username: string, password: string, admin?: boolean) {
-		/**
-		 * Inserts a new user into the "users" table
-		 * @param user Object containing parameters to insert a new user into the "users" table
-		 * @returns {number?} id of the created user
-		 */
 		try {
+			// Try to create a new user
 			return (
 				await db("users")
 					.insert({
@@ -66,23 +61,12 @@ class UserDAO {
 		}
 	}
 
-	async getUsers(ids: number[]) {
-		/**
-		 * Gets requested users from "users" table
-		 * @param ids Array of requested user ids
-		 * @returns {object} Queried users
-		 */
-		const users = await db("users").select("*").whereIn("user_id", ids);
-		return users;
+	async getUsers(usernames: string[]) {
+		return await db("users").select("*").whereIn("username", usernames);
 	}
 
-	async getUser(id: number) {
-		/**
-		 * Returns a single User instance
-		 * @param id user_id number
-		 * @returns {object} Queried user
-		 */
-		return await db("users").select("*").where({ user_id: id }).first();
+	async getUser(username: string) {
+		return await db("users").select("*").where({ username }).first();
 	}
 }
 

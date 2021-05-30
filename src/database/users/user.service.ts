@@ -23,8 +23,8 @@ class UserService {
 		return UserDAO.createUser(username, password, admin);
 	}
 
-	getUser(id: number) {
-		return UserDAO.getUser(id);
+	getUser(username: string) {
+		return UserDAO.getUser(username);
 	}
 }
 
