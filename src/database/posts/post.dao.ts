@@ -26,7 +26,6 @@ class PostDAO {
 		limit: number = 0
 	) {
 		// Gets a paginated response of the posts belonging to a profile
-		console.log(username, offset, limit);
 
 		// Get post data
 		const data = await db("posts")
