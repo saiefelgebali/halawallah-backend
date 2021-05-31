@@ -11,7 +11,7 @@ class ChatRoomController {
 	async createChatRoom(parent: any, args: any, context: any) {
 		// 1. Make request to db - including requesting profile
 		const chatRoom = await ChatRoomService.createChatRoom([
-			...new Set([context.user.username, ...args.profileIds]),
+			...new Set([context.user.username, ...args.profileUsernames]),
 		]);
 
 		// 2. Return new chatRoom details

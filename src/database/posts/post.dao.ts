@@ -27,22 +27,23 @@ class PostDAO {
 	) {
 		// Gets a paginated response of the posts belonging to a profile
 
+		// Get usernames of following
+		const followingUsernames = (
+			await db("profile_following")
+				.select("following_username")
+				.where("profile_username", username)
+		).map((obj) => obj.following_username);
+
+		// Include my username in array
+		const usernames = [username, ...followingUsernames];
+
 		// Get post data
 		const data = await db("posts")
 			.select("posts.*")
-			.innerJoin("profiles", "posts.username", "profiles.username")
-			.fullOuterJoin(
-				"profile_following",
-				"posts.username",
-				"profile_following.following_username"
-			)
-			.where("profile_following.profile_username", username)
-			.orWhere("posts.username", username)
+			.whereIn("username", usernames)
 			.orderBy("posts.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
-
-		console.log(data);
 
 		// Get pagination meta data
 		const agg = (

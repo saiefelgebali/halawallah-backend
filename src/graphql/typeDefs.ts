@@ -115,7 +115,11 @@ const typeDefs = gql`
 		# [CHAT]
 		getChatRoomById(room_id: Int!): ChatRoom
 		getProfileChatRooms(offset: Int, limit: Int): PaginatedChatRooms
-		getChatRoomMessages(offset: Int, limit: Int): PaginatedMessages
+		getChatRoomMessages(
+			room_id: Int!
+			offset: Int
+			limit: Int
+		): PaginatedMessages
 	}
 
 	# [ROOT MUTATION]

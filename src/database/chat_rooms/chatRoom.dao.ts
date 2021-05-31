@@ -36,17 +36,9 @@ class ChatRoomDAO {
 	}
 
 	async getChatRoom(room_id: number) {
-		// 1a. Query for ChatRoom
+		// 1. Query for ChatRoom
 		const chatRoom = (
-			await db("chat_rooms")
-				// 1b. Join with GroupChat
-				.join(
-					"group_chats",
-					"chat_rooms.room_id",
-					"group_chats.room_id"
-				)
-				.where("chat_rooms.room_id", room_id)
-				.select("*")
+			await db("chat_rooms").where({ room_id }).select("*")
 		)[0];
 
 		// 2. Return ChatRoom

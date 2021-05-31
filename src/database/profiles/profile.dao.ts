@@ -74,13 +74,15 @@ class ProfileDAO {
 				"profiles.username"
 			)
 			.select("*")
-			.where("profile_following.username", username)
+			.where("profile_following.profile_username", username)
 			.orderBy("profile_following.created_at", "desc")
 			.offset(offset)
 			.limit(limit);
 
 		const agg = (
-			await db("profile_following").where("username", username).count()
+			await db("profile_following")
+				.where("profile_username", username)
+				.count()
 		)[0].count;
 
 		const count = typeof agg === "number" ? agg : parseInt(agg);

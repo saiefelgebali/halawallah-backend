@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
 				.inTable("chat_rooms")
 				.onDelete("CASCADE")
 				.primary();
-			table.string("name");
+			table.string("name").defaultTo("New Group Chat");
 			table.string("image");
 		})
 
