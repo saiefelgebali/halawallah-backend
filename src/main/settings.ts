@@ -1,4 +1,6 @@
 import alamanah from "alamanah-express";
+import express from "express";
+import path from "path";
 import routes from "./routes";
 import middleware from "./middleware";
 
@@ -16,6 +18,9 @@ const settings = {
 
 // Al Amanah Application
 const app = alamanah(settings);
+
+// Serve static files
+app.use("/media", express.static(path.join(__dirname, "../../media")));
 
 export default app;
 export { settings };

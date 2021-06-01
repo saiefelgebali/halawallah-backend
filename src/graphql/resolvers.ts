@@ -1,4 +1,3 @@
-import UserService from "../database/users/user.service";
 import UserController from "../database/users/user.controller";
 import ProfileController from "../database/profiles/profile.controller";
 import PostController from "../database/posts/post.controller";
@@ -15,7 +14,7 @@ const resolvers = {
 			if (!parent.pfp) {
 				return null;
 			}
-			return `${context.url}/api/media/img/pfp/${parent.pfp}`;
+			return `${context.url}/media/img/pfp/${parent.pfp}`;
 		},
 		isFollowing: ProfileController.checkFollowing,
 	},
@@ -28,7 +27,7 @@ const resolvers = {
 			if (!parent.image) {
 				return null;
 			}
-			return `${context.url}/api/media/img/post/${parent.image}`;
+			return `${context.url}/media/img/post/${parent.image}`;
 		},
 		created_at: (parent: any, args: any, context: any) => {
 			// Return timestamp in ISO format as a string
