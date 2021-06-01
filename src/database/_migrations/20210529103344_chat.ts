@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
 
 		.createTable("chat_rooms", (table) => {
 			table.increments("room_id");
+			table.timestamps(true, true);
 		})
 
 		.createTable("group_chats", (table) => {
@@ -16,6 +17,7 @@ export async function up(knex: Knex): Promise<void> {
 				.primary();
 			table.string("name").defaultTo("New Group Chat");
 			table.string("image");
+			table.timestamps(true, true);
 		})
 
 		.createTable("profile_chat_room", (table) => {
@@ -30,6 +32,7 @@ export async function up(knex: Knex): Promise<void> {
 				.inTable("chat_rooms")
 				.onDelete("CASCADE");
 			table.primary(["username", "room_id"]);
+			table.timestamps(true, true);
 		})
 
 		.createTable("messages", (table) => {
@@ -45,6 +48,7 @@ export async function up(knex: Knex): Promise<void> {
 				.references("room_id")
 				.inTable("chat_rooms")
 				.onDelete("CASCADE");
+			table.timestamps(true, true);
 		});
 }
 

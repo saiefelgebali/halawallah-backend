@@ -58,7 +58,8 @@ class MesssageDAO {
 			.select("*")
 			.where({ room_id })
 			.offset(offset)
-			.limit(limit);
+			.limit(limit)
+			.orderBy("created_at", "desc");
 
 		// 4. Return paginated response object
 		return { count, hasMore, data };
