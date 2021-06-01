@@ -70,6 +70,7 @@ const typeDefs = gql`
 	type Message {
 		message_id: Int
 		room: ChatRoom
+		username: String
 		profile: Profile
 		text: String
 	}

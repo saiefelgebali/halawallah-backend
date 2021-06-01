@@ -21,6 +21,10 @@ class ChatRoomService {
 		return ChatRoomDAO.getProfileChatRooms(username, offset, limit);
 	}
 
+	getProfileChatRoomIds(username: string) {
+		return ChatRoomDAO.getProfileChatRoomIds(username);
+	}
+
 	addMembersToChatRoom(room_id: number, profileUsernames: string[]) {
 		return ChatRoomDAO.addMembersToChatRoom(room_id, profileUsernames);
 	}

@@ -117,6 +117,21 @@ class ChatRoomDAO {
 		return { count, hasMore, data };
 	}
 
+	async getProfileChatRoomIds(username: string) {
+		// 1a. Query for chatRooms
+		const chatRoomIds = await db("chat_rooms")
+			// 1b. Join with ProfileChatRoom table
+			.join(
+				"profile_chat_room",
+				"profile_chat_room.room_id",
+				"chat_rooms.room_id"
+			)
+			.select("chat_rooms.room_id")
+			.where("profile_chat_room.username", username);
+
+		return chatRoomIds;
+	}
+
 	async getGroupChat(room_id: number) {
 		// Return group chat by using room_id
 		return (await db("group_chats").select("*").where({ room_id }))[0];

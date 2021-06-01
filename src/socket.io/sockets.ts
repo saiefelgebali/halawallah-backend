@@ -11,7 +11,11 @@ export default function createSocketServer(app: Application) {
 	// Initialize socket io on httpServer
 	const io = new Server(httpServer, {
 		cors: {
-			origin: ["http://localhost:5500"],
+			origin: [
+				"http://localhost:3000",
+				"http://192.168.1.111:3000",
+				"http://127.0.0.1:3000",
+			],
 		},
 	});
 
