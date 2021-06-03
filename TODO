@@ -27,4 +27,7 @@
 
 // TODO BEFORE PRODUCTION 
 [ ] Change to Production Database
+[ ] Use postgres pubsub library for graphql subscriptions 
+    - https://github.com/GraphQLCollege/graphql-postgres-subscriptions
+    - https://www.apollographql.com/docs/apollo-server/data/subscriptions/#production-pubsub-libraries
 [ ] Change socket.io cors to appropriate url (Avoid wildcard)

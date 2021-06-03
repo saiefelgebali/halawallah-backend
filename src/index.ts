@@ -1,19 +1,16 @@
 import { print, ConsoleColor } from "alamanah-express";
 import app, { settings } from "./main/settings";
-import { connectApolloServer } from "./graphql/apollo";
-import createSocketServer from "./socket.io/sockets";
 import { Application } from "express";
+import { connectApolloServer } from "./graphql/apollo";
 
 async function run(app: Application) {
 	// Connect graphql server
-	const graphql = await connectApolloServer(app);
-
-	// Connect to socketio server
-	// Accept websocket connections
-	const server = createSocketServer(app);
+	// use new httpServer endpoint
+	// handle 'http' as well as 'ws' connections
+	const { httpServer, apolloServer } = await connectApolloServer(app);
 
 	// Start Al Amanah server
-	server.listen(settings.port, () => {
+	httpServer.listen(settings.port, () => {
 		// Print out startup details
 		const tag = "SERVER";
 		console.clear();
@@ -24,7 +21,12 @@ async function run(app: Application) {
 		);
 		print(`http://localhost:${settings.port}`, tag, ConsoleColor.FgGreen);
 		print(
-			`http://localhost:${settings.port}${graphql.graphqlPath}`,
+			`http://localhost:${settings.port}${apolloServer.graphqlPath}`,
+			tag,
+			ConsoleColor.FgGreen
+		);
+		print(
+			`http://localhost:${settings.port}${apolloServer.subscriptionsPath}`,
 			tag,
 			ConsoleColor.FgGreen
 		);

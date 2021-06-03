@@ -4,6 +4,8 @@ import PostController from "../database/posts/post.controller";
 import CommentController from "../database/comments/comment.controller";
 import ChatRoomsController from "../database/chat_rooms/chatRoom.controller";
 import MessageController from "../database/messages/message.controller";
+import { pubsub } from "./pubSub";
+import { withFilter } from "graphql-subscriptions";
 
 const resolvers = {
 	Profile: {
@@ -90,8 +92,33 @@ const resolvers = {
 		createChatRoom: ChatRoomsController.createChatRoom,
 		addMembersToChatRoom: ChatRoomsController.addMembersToChatRoom,
 		updateGroupChatName: ChatRoomsController.updateGroupChatName,
-		createMessage: MessageController.createMessage,
+		createMessage: async (parent: any, args: any, context: any) => {
+			const message = await MessageController.createMessage(
+				parent,
+				args,
+				context
+			);
+
+			// Publish subcription event
+			pubsub.publish("MESSAGE_CREATED", { messageCreated: message });
+
+			return message;
+		},
 		deleteMessage: MessageController.deleteMessage,
+	},
+
+	// [ROOT SUBSCRIPTIONS]
+	Subscription: {
+		messageCreated: {
+			subscribe: withFilter(
+				() => pubsub.asyncIterator(["MESSAGE_CREATED"]),
+				(payload, variables) => {
+					// Only push an update if the message room_id
+					// is the room_id subscribed to
+					return payload.messageCreated.room_id === variables.room_id;
+				}
+			),
+		},
 	},
 };
 

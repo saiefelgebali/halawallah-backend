@@ -149,6 +149,11 @@ const typeDefs = gql`
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean
 	}
+
+	# [ROOT SUBSCRIPTION]
+	type Subscription {
+		messageCreated(room_id: Int!): Message
+	}
 `;
 
 export default typeDefs;
