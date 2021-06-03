@@ -44,9 +44,7 @@ class ChatRoomController {
 	async getProfileChatRooms(parent: any, args: any, context: any) {
 		// 1. Make request to db
 		const chatRooms = await ChatRoomService.getProfileChatRooms(
-			context.user.username,
-			args.offset,
-			args.limit
+			context.user.username
 		);
 
 		// 2. Return new paginated chatRoom response

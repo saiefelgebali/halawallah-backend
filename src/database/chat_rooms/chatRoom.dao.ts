@@ -79,42 +79,17 @@ class ChatRoomDAO {
 		}
 	}
 
-	async getProfileChatRooms(
-		username: string,
-		offset: number = 0,
-		limit: number = 0
-	) {
-		// 1a. Get Count of all chatRooms relating to profile
-		// ~~ bitwise double NOT, used to parse int
-		const count = ~~(
-			await db("chat_rooms")
-				// 1b. Join with ProfileChatRoom table
-				.join(
-					"profile_chat_room",
-					"profile_chat_room.room_id",
-					"chat_rooms.room_id"
-				)
-				.where("profile_chat_room.username", username)
-				.count()
-		)[0]?.count;
-
-		// 2. Determine hasMore
-		const hasMore = offset + limit < count;
-
-		// 3. Query for chatRooms
-		const data = await db("chat_rooms")
-			// 3b. Join with ProfileChatRoom table
+	async getProfileChatRooms(username: string) {
+		// Query for chatRooms
+		return await db("chat_rooms")
+			// Join with ProfileChatRoom table
 			.join(
 				"profile_chat_room",
 				"profile_chat_room.room_id",
 				"chat_rooms.room_id"
 			)
 			.select("*")
-			.where("profile_chat_room.username", username)
-			.offset(offset)
-			.limit(limit);
-
-		return { count, hasMore, data };
+			.where("profile_chat_room.username", username);
 	}
 
 	async getProfileChatRoomIds(username: string) {

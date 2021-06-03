@@ -102,9 +102,51 @@ const resolvers = {
 			// Publish subcription event
 			pubsub.publish("MESSAGE_CREATED", { messageCreated: message });
 
+			// Publish event, stopped typing
+			const { username, room_id } = message;
+			const messageTyping = {
+				room_id,
+				username,
+				isTyping: false,
+			};
+
+			pubsub.publish("MESSAGE_TYPING", { messageTyping });
+
 			return message;
 		},
 		deleteMessage: MessageController.deleteMessage,
+		startTyping: (parent: any, args: any, context: any) => {
+			// Get relevant info
+			const username = context.user.username;
+			const room_id = args.room_id;
+
+			const messageTyping = {
+				room_id,
+				username,
+				isTyping: true,
+			};
+
+			// Publish subcription event
+			pubsub.publish("MESSAGE_TYPING", { messageTyping });
+
+			return !!messageTyping;
+		},
+		stopTyping: (parent: any, args: any, context: any) => {
+			// Get relevant info
+			const username = context.user.username;
+			const room_id = args.room_id;
+
+			const messageTyping = {
+				room_id,
+				username,
+				isTyping: false,
+			};
+
+			// Publish subcription event
+			pubsub.publish("MESSAGE_TYPING", { messageTyping });
+
+			return !!messageTyping;
+		},
 	},
 
 	// [ROOT SUBSCRIPTIONS]
@@ -116,6 +158,16 @@ const resolvers = {
 					// Only push an update if the message room_id
 					// is the room_id subscribed to
 					return payload.messageCreated.room_id === variables.room_id;
+				}
+			),
+		},
+		messageTyping: {
+			subscribe: withFilter(
+				() => pubsub.asyncIterator(["MESSAGE_TYPING"]),
+				(payload, variables) => {
+					// Only push an update if the args room_id
+					// is the room_id subscribed to
+					return payload.messageTyping.room_id === variables.room_id;
 				}
 			),
 		},

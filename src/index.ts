@@ -25,11 +25,6 @@ async function run(app: Application) {
 			tag,
 			ConsoleColor.FgGreen
 		);
-		print(
-			`http://localhost:${settings.port}${apolloServer.subscriptionsPath}`,
-			tag,
-			ConsoleColor.FgGreen
-		);
 	});
 }
 

@@ -87,6 +87,12 @@ const typeDefs = gql`
 		data: [Message]
 	}
 
+	type MessageTyping {
+		room_id: Int!
+		username: String!
+		isTyping: Boolean!
+	}
+
 	# [ROOT QUERY]
 
 	type Query {
@@ -115,7 +121,7 @@ const typeDefs = gql`
 
 		# [CHAT]
 		getChatRoomById(room_id: Int!): ChatRoom
-		getProfileChatRooms(offset: Int, limit: Int): PaginatedChatRooms
+		getProfileChatRooms: [ChatRoom]
 		getChatRoomMessages(
 			room_id: Int!
 			offset: Int
@@ -148,11 +154,14 @@ const typeDefs = gql`
 		updateGroupChatName(room_id: Int!, name: String!): GroupChat
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean
+		startTyping(room_id: Int!): Boolean
+		stopTyping(room_id: Int!): Boolean
 	}
 
 	# [ROOT SUBSCRIPTION]
 	type Subscription {
 		messageCreated(room_id: Int!): Message
+		messageTyping(room_id: Int!): MessageTyping
 	}
 `;
 
