@@ -121,8 +121,7 @@ const typeDefs = gql`
 		feed(offset: Int, limit: Int): PaginatedPosts
 
 		# [CHAT]
-		getChatRoomById(room_id: Int!): ChatRoom
-		getPrivateChatRoom(username: String!): ChatRoom
+		getChatRoom(room_id: Int, username: String): ChatRoom
 		getProfileChatRooms: [ChatRoom]
 		getChatRoomMessages(
 			room_id: Int!

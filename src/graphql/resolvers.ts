@@ -86,10 +86,19 @@ const resolvers = {
 		feed: PostController.getMyFeed,
 
 		// [CHAT]
-		getChatRoomById: ChatRoomsController.getChatRoom,
+		async getChatRoom(parent: any, args: any, context: any) {
+			// Return private chat room if username is passed
+			if (args.username) {
+				return await ChatRoomsController.getPrivateChat(
+					parent,
+					args,
+					context
+				);
+			}
+			return ChatRoomsController.getChatRoom(parent, args);
+		},
 		getProfileChatRooms: ChatRoomsController.getProfileChatRooms,
 		getChatRoomMessages: MessageController.getChatRoomMessages,
-		getPrivateChatRoom: ChatRoomsController.getPrivateChat,
 	},
 
 	// [ROOT MUTATION]
