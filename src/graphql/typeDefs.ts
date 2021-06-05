@@ -163,7 +163,7 @@ const typeDefs = gql`
 
 	# [ROOT SUBSCRIPTION]
 	type Subscription {
-		messageCreated(room_id: Int!): Message
+		messageCreated(rooms: [Int]!): Message
 		messageTyping(room_id: Int!): MessageTyping
 	}
 `;

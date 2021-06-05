@@ -178,7 +178,9 @@ const resolvers = {
 				(payload, variables) => {
 					// Only push an update if the message room_id
 					// is the room_id subscribed to
-					return payload.messageCreated.room_id === variables.room_id;
+					return variables.rooms.includes(
+						payload.messageCreated.room_id
+					);
 				}
 			),
 		},
