@@ -22,7 +22,6 @@ export const apolloServer = new ApolloServer({
 			if (user) {
 				// Get socket username
 				const username = user.username;
-				console.log(username);
 				return { user: { username } };
 			} else {
 				// Return unauthenticated error

@@ -6,12 +6,14 @@ import ChatRoomsController from "../database/chat_rooms/chatRoom.controller";
 import MessageController from "../database/messages/message.controller";
 import { pubsub } from "./pubSub";
 import { withFilter } from "graphql-subscriptions";
+import profileService from "../database/profiles/profile.service";
+import chatRoomService from "../database/chat_rooms/chatRoom.service";
 
 const resolvers = {
 	Profile: {
 		following: ProfileController.getProfileFollowing,
 		posts: PostController.getPostsByProfile,
-		pfp: (parent: any, args: any, context: any) => {
+		pfp(parent: any, args: any, context: any) {
 			// Handle empty pfp
 			if (!parent.pfp) {
 				return null;
@@ -24,14 +26,14 @@ const resolvers = {
 	Post: {
 		profile: ProfileController.getProfile,
 		comments: CommentController.getPostComments,
-		image: (parent: any, args: any, context: any) => {
+		image(parent: any, args: any, context: any) {
 			// Handle empty image
 			if (!parent.image) {
 				return null;
 			}
 			return `${context.url}/media/img/post/${parent.image}`;
 		},
-		created_at: (parent: any, args: any, context: any) => {
+		created_at(parent: any, args: any, context: any) {
 			// Return timestamp in ISO format as a string
 			return new Date(parent.created_at).toISOString();
 		},
@@ -43,7 +45,24 @@ const resolvers = {
 
 	ChatRoom: {
 		members: ChatRoomsController.getChatRoomMembers,
-		group: ChatRoomsController.getGroupChat,
+		public: ChatRoomsController.getPublicChat,
+		async private(parent: any, args: any, context: any) {
+			// Get room data
+			const room = await chatRoomService.getPrivateChatById(
+				parent.room_id
+			);
+
+			if (!room) return null;
+
+			// Find username that isnt context
+			const usernames = [room.username_1, room.username_2];
+			const otherUsername = usernames.find(
+				(u) => u !== context.user.username
+			);
+
+			// Return other user profile
+			return profileService.getProfile(otherUsername);
+		},
 		messages: MessageController.getChatRoomMessages,
 	},
 
@@ -70,6 +89,7 @@ const resolvers = {
 		getChatRoomById: ChatRoomsController.getChatRoom,
 		getProfileChatRooms: ChatRoomsController.getProfileChatRooms,
 		getChatRoomMessages: MessageController.getChatRoomMessages,
+		getPrivateChatRoom: ChatRoomsController.getPrivateChat,
 	},
 
 	// [ROOT MUTATION]
@@ -89,9 +109,10 @@ const resolvers = {
 		deleteComment: CommentController.deleteCommentById,
 
 		// [CHAT]
-		createChatRoom: ChatRoomsController.createChatRoom,
+		createPublicChat: ChatRoomsController.createPublicChat,
+		createPrivateChat: ChatRoomsController.createPrivateChat,
 		addMembersToChatRoom: ChatRoomsController.addMembersToChatRoom,
-		updateGroupChatName: ChatRoomsController.updateGroupChatName,
+		updatePublicChatName: ChatRoomsController.updatePublicChatName,
 		createMessage: async (parent: any, args: any, context: any) => {
 			const message = await MessageController.createMessage(
 				parent,

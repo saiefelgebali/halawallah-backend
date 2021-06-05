@@ -58,11 +58,12 @@ const typeDefs = gql`
 	type ChatRoom {
 		room_id: Int
 		members: [Profile]
-		group: GroupChat
+		public: PublicChat
+		private: Profile
 		messages(offset: Int, limit: Int): PaginatedMessages
 	}
 
-	type GroupChat {
+	type PublicChat {
 		name: String
 		image: String
 	}
@@ -121,6 +122,7 @@ const typeDefs = gql`
 
 		# [CHAT]
 		getChatRoomById(room_id: Int!): ChatRoom
+		getPrivateChatRoom(username: String!): ChatRoom
 		getProfileChatRooms: [ChatRoom]
 		getChatRoomMessages(
 			room_id: Int!
@@ -146,12 +148,13 @@ const typeDefs = gql`
 		deleteComment(comment_id: Int!): Boolean
 
 		# [CHAT]
-		createChatRoom(profileUsernames: [String]!): ChatRoom
+		createPublicChat(profileUsernames: [String]!): ChatRoom
+		createPrivateChat(username: String): ChatRoom
 		addMembersToChatRoom(
 			room_id: Int!
 			profileUsernames: [String]!
 		): ChatRoom
-		updateGroupChatName(room_id: Int!, name: String!): GroupChat
+		updatePublicChatName(room_id: Int!, name: String!): PublicChat
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean
 		startTyping(room_id: Int!): Boolean

@@ -5,10 +5,31 @@ export async function up(knex: Knex): Promise<void> {
 
 		.createTable("chat_rooms", (table) => {
 			table.increments("room_id");
+			table.boolean("private").defaultTo(false);
 			table.timestamps(true, true);
 		})
 
-		.createTable("group_chats", (table) => {
+		.createTable("private_chats", (table) => {
+			table
+				.integer("room_id")
+				.references("room_id")
+				.inTable("chat_rooms")
+				.onDelete("CASCADE");
+			table
+				.string("username_1")
+				.references("username")
+				.inTable("profiles")
+				.onDelete("CASCADE");
+			table
+				.string("username_2")
+				.references("username")
+				.inTable("profiles")
+				.onDelete("CASCADE");
+			table.primary(["username_1", "username_2"]);
+			table.timestamps(true, true);
+		})
+
+		.createTable("public_chats", (table) => {
 			table
 				.integer("room_id")
 				.references("room_id")
@@ -20,7 +41,7 @@ export async function up(knex: Knex): Promise<void> {
 			table.timestamps(true, true);
 		})
 
-		.createTable("profile_chat_room", (table) => {
+		.createTable("members", (table) => {
 			table
 				.string("username")
 				.references("username")
@@ -55,7 +76,8 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
 	return knex.schema
 		.dropTable("messages")
-		.dropTable("profile_chat_room")
-		.dropTable("group_chats")
+		.dropTable("members")
+		.dropTable("private_chats")
+		.dropTable("public_chats")
 		.dropTable("chat_rooms");
 }

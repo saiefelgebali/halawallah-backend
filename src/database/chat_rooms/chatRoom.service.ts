@@ -5,8 +5,12 @@ class ChatRoomService {
 	 * Service layer for chatRoom database operations
 	 */
 
-	createChatRoom(profileUsernames: string[]) {
-		return ChatRoomDAO.createChatRoom(profileUsernames);
+	createPublicChat(profileUsernames: string[]) {
+		return ChatRoomDAO.createPublicChat(profileUsernames);
+	}
+
+	createPrivateChat(username_1: string, username_2: string) {
+		return ChatRoomDAO.createPrivateChat(username_1, username_2);
 	}
 
 	getChatRoom(room_id: number) {
@@ -29,12 +33,20 @@ class ChatRoomService {
 		return ChatRoomDAO.addMembersToChatRoom(room_id, profileUsernames);
 	}
 
-	getGroupChat(room_id: number) {
-		return ChatRoomDAO.getGroupChat(room_id);
+	getPublicChat(room_id: number) {
+		return ChatRoomDAO.getPublicChat(room_id);
 	}
 
-	updateGroupChatName(room_id: number, name: string) {
-		return ChatRoomDAO.updateGroupChatName(room_id, name);
+	getPrivateChat(username_1: string, username_2: string) {
+		return ChatRoomDAO.getPrivateChat(username_1, username_2);
+	}
+
+	getPrivateChatById(room_id: number) {
+		return ChatRoomDAO.getPrivateChatById(room_id);
+	}
+
+	updatePublicChatName(room_id: number, name: string) {
+		return ChatRoomDAO.updatePublicChatName(room_id, name);
 	}
 }
 

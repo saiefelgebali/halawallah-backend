@@ -35,6 +35,18 @@ class MessageController {
 			context.user.username
 		);
 	}
+
+	async getPrivateChatRoomMessages(parent: any, args: any, context: any) {
+		// Get private chat room_id
+		const room_id = 1;
+
+		// Return paginated messages object
+		return await MessageService.getChatRoomMessages(
+			room_id,
+			args.offset,
+			args.limit
+		);
+	}
 }
 
 export default new MessageController();

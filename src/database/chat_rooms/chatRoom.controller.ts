@@ -8,11 +8,21 @@ class ChatRoomController {
 	 * Apollo GraphQL controller for chatRoom objects
 	 */
 
-	async createChatRoom(parent: any, args: any, context: any) {
+	async createPublicChat(parent: any, args: any, context: any) {
 		// 1. Make request to db - including requesting profile
-		const chatRoom = await ChatRoomService.createChatRoom([
+		const chatRoom = await ChatRoomService.createPublicChat([
 			...new Set([context.user.username, ...args.profileUsernames]),
 		]);
+
+		// 2. Return new chatRoom details
+		return chatRoom;
+	}
+	async createPrivateChat(parent: any, args: any, context: any) {
+		// 1. Make request to db - including requesting profile
+		const chatRoom = await ChatRoomService.createPrivateChat(
+			context.user.username,
+			args.username
+		);
 
 		// 2. Return new chatRoom details
 		return chatRoom;
@@ -62,9 +72,9 @@ class ChatRoomController {
 		return chatRoom;
 	}
 
-	async updateGroupChatName(parent: any, args: any, context: any) {
+	async updatePublicChatName(parent: any, args: any, context: any) {
 		// 1. Make update query
-		const chatRoom = await ChatRoomService.updateGroupChatName(
+		const chatRoom = await ChatRoomService.updatePublicChatName(
 			args.room_id,
 			args.name
 		);
@@ -73,12 +83,33 @@ class ChatRoomController {
 		return chatRoom;
 	}
 
-	async getGroupChat(parent: any, args: any, context: any) {
-		// 1. Query group chat
-		const groupChat = ChatRoomService.getGroupChat(parent.room_id);
+	async getPublicChat(parent: any, args: any, context: any) {
+		// 1. Query public chat
+		const publicChat = ChatRoomService.getPublicChat(parent.room_id);
 
 		// 2. Return group chat
-		return groupChat;
+		return publicChat;
+	}
+
+	async getPrivateChat(parent: any, args: any, context: any) {
+		// 1. Query private chat
+		const privateChat = ChatRoomService.getPrivateChat(
+			context.user.username,
+			args.username
+		);
+
+		// 2. Return private chat
+		return privateChat;
+	}
+
+	async getPrivateChatById(parent: any, args: any, context: any) {
+		// 1. Query private chat
+		const privateChat = ChatRoomService.getPrivateChatById(
+			args.room_id || parent.room_id
+		);
+
+		// 2. Return private chat
+		return privateChat;
 	}
 }
 
