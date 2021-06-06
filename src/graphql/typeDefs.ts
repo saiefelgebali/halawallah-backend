@@ -74,6 +74,7 @@ const typeDefs = gql`
 		username: String
 		profile: Profile
 		text: String
+		created_at: String
 	}
 
 	type PaginatedChatRooms {

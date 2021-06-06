@@ -92,11 +92,19 @@ class ChatRoomController {
 	}
 
 	async getPrivateChat(parent: any, args: any, context: any) {
-		// 1. Query private chat
-		const privateChat = ChatRoomService.getPrivateChat(
+		// 1a. Query private chat
+		const privateChat = await ChatRoomService.getPrivateChat(
 			context.user.username,
 			args.username
 		);
+
+		// 1b. If private chat does not exist, make a new one
+		if (!privateChat) {
+			return await ChatRoomService.createPrivateChat(
+				context.user.username,
+				args.username
+			);
+		}
 
 		// 2. Return private chat
 		return privateChat;
