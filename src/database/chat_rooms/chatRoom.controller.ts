@@ -12,7 +12,7 @@ class ChatRoomController {
 		// 1. Make request to db - including requesting profile
 		const chatRoom = await ChatRoomService.createPublicChat([
 			...new Set([context.user.username, ...args.profileUsernames]),
-		]);
+		], args.name);
 
 		// 2. Return new chatRoom details
 		return chatRoom;

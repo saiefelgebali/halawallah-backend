@@ -5,8 +5,8 @@ class ChatRoomService {
 	 * Service layer for chatRoom database operations
 	 */
 
-	createPublicChat(profileUsernames: string[]) {
-		return ChatRoomDAO.createPublicChat(profileUsernames);
+	createPublicChat(profileUsernames: string[], name: string) {
+		return ChatRoomDAO.createPublicChat(profileUsernames, name);
 	}
 
 	createPrivateChat(username_1: string, username_2: string) {

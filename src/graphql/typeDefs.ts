@@ -148,7 +148,7 @@ const typeDefs = gql`
 		deleteComment(comment_id: Int!): Boolean
 
 		# [CHAT]
-		createPublicChat(profileUsernames: [String]!): ChatRoom
+		createPublicChat(profileUsernames: [String]!, name: String): ChatRoom
 		createPrivateChat(username: String): ChatRoom
 		addMembersToChatRoom(
 			room_id: Int!

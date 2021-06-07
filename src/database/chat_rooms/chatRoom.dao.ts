@@ -46,7 +46,7 @@ class ChatRoomDAO {
 		return privateChat;
 	}
 
-	async createPublicChat(profileUsernames: string[]) {
+	async createPublicChat(profileUsernames: string[], name: string) {
 		// 1. Create new chatRoom and get room_id
 		const chatRoom = await this.createChatRoom(profileUsernames);
 
@@ -55,6 +55,7 @@ class ChatRoomDAO {
 			await db("public_chats")
 				.insert({
 					room_id: chatRoom.room_id,
+					name,
 				})
 				.returning("*")
 		)[0];
