@@ -38,6 +38,7 @@ const typeDefs = gql`
 	type Comment {
 		comment_id: Int
 		profile: Profile
+		post: Post
 		text: String
 	}
 

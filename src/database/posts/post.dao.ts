@@ -47,16 +47,7 @@ class PostDAO {
 
 		// Get pagination meta data
 		const agg = (
-			await db("posts")
-				.innerJoin("profiles", "posts.username", "profiles.username")
-				.innerJoin(
-					"profile_following",
-					"posts.username",
-					"profile_following.following_username"
-				)
-				.where("profile_following.profile_username", username)
-				.orWhere("posts.username", username)
-				.count()
+			await db("posts").whereIn("username", usernames).count()
 		)[0].count;
 
 		const count = typeof agg === "number" ? agg : parseInt(agg);

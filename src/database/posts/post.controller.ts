@@ -36,7 +36,7 @@ class PostController {
 
 	async getPostById(parent: any, args: any) {
 		// Return specific post
-		return await PostService.getPostById(args.post_id);
+		return await PostService.getPostById(args.post_id || parent.post_id);
 	}
 
 	async getPostsByProfile(parent: any, args: any) {

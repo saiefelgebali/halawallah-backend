@@ -41,6 +41,7 @@ const resolvers = {
 
 	Comment: {
 		profile: ProfileController.getProfile,
+		post: PostController.getPostById,
 	},
 
 	ChatRoom: {
