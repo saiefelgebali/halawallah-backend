@@ -67,6 +67,16 @@ const resolvers = {
 		messages: MessageController.getChatRoomMessages,
 	},
 
+	PublicChat: {
+		image(parent: any, args: any, context: any) {
+			// Handle empty image
+			if (!parent.image) {
+				return null;
+			}
+			return `${context.url}/media/img/public_chat/${parent.image}`;
+		},
+	},
+
 	Message: {
 		room: ChatRoomsController.getChatRoom,
 		profile: ProfileController.getProfile,

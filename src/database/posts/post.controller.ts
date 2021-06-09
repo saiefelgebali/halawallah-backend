@@ -1,7 +1,6 @@
 import { ApolloError } from "apollo-server-errors";
 import { Request, Response } from "express";
 import { processRequestImage } from "../../api/process";
-import ProfileService from "../profiles/profile.service";
 import PostService from "./post.service";
 
 class PostController {

@@ -143,6 +143,15 @@ class ChatRoomDAO {
 		return (await db("private_chats").select("*").where({ room_id }))[0];
 	}
 
+	async uploadImage(room_id: number, image: string) {
+		return (
+			await db("public_chats")
+				.update({ image })
+				.where({ room_id })
+				.returning("*")
+		)[0];
+	}
+
 	async updatePublicChatName(room_id: number, name: string) {
 		// 1. Update PublicChat query
 		const PublicChat = (

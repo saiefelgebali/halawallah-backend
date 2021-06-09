@@ -2,6 +2,7 @@ node_modules
 package-lock.json
 media/img/pfp/*
 media/img/post/*
+media/img/public_chat/*
 coverage
 lib
 config.ts

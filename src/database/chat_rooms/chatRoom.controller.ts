@@ -1,7 +1,6 @@
-import { ApolloError } from "apollo-server-errors";
+import { Request, Response } from "express";
+import { processRequestImage } from "../../api/process";
 import ChatRoomService from "./chatRoom.service";
-
-const unauthMessage = new ApolloError("Unauthorized Access");
 
 class ChatRoomController {
 	/**
@@ -10,13 +9,15 @@ class ChatRoomController {
 
 	async createPublicChat(parent: any, args: any, context: any) {
 		// 1. Make request to db - including requesting profile
-		const chatRoom = await ChatRoomService.createPublicChat([
-			...new Set([context.user.username, ...args.profileUsernames]),
-		], args.name);
+		const chatRoom = await ChatRoomService.createPublicChat(
+			[...new Set([context.user.username, ...args.profileUsernames])],
+			args.name
+		);
 
 		// 2. Return new chatRoom details
 		return chatRoom;
 	}
+
 	async createPrivateChat(parent: any, args: any, context: any) {
 		// 1. Make request to db - including requesting profile
 		const chatRoom = await ChatRoomService.createPrivateChat(
@@ -81,6 +82,26 @@ class ChatRoomController {
 
 		// 2. Return chatRoom
 		return chatRoom;
+	}
+
+	async uploadImage(req: Request, res: Response) {
+		console.log(req.body);
+		try {
+			// Process image
+			const image = await processRequestImage("public_chat", req);
+
+			// Upload to db
+			const result = await ChatRoomService.uploadImage(
+				req.body.room_id,
+				image
+			);
+
+			// Return new profile details in json format
+			res.json(result);
+		} catch (error) {
+			// Internal server error
+			res.sendStatus(500).json(error);
+		}
 	}
 
 	async getPublicChat(parent: any, args: any, context: any) {

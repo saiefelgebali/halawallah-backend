@@ -48,6 +48,10 @@ class ChatRoomService {
 	updatePublicChatName(room_id: number, name: string) {
 		return ChatRoomDAO.updatePublicChatName(room_id, name);
 	}
+
+	uploadImage(room_id: number, image: string) {
+		return ChatRoomDAO.uploadImage(room_id, image);
+	}
 }
 
 export default new ChatRoomService();
