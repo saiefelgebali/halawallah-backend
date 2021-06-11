@@ -103,6 +103,20 @@ class ChatRoomDAO {
 		}
 	}
 
+	async removeMembersFromChatRoom(
+		room_id: number,
+		profileUsernames: string[]
+	) {
+		// 1. Delete profile chat_room connections
+		await db("members")
+			.delete()
+			.whereIn("username", profileUsernames)
+			.andWhere({ room_id });
+
+		// 2. Return chatRoom
+		return await db("chat_rooms").select("*").where({ room_id }).first();
+	}
+
 	async getProfileChatRooms(username: string) {
 		// Query for chatRooms
 		return await db("chat_rooms")

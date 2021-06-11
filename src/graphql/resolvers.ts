@@ -106,7 +106,7 @@ const resolvers = {
 					context
 				);
 			}
-			return ChatRoomsController.getChatRoom(parent, args);
+			return ChatRoomsController.getChatRoom(parent, args, context);
 		},
 		getProfileChatRooms: ChatRoomsController.getProfileChatRooms,
 		getChatRoomMessages: MessageController.getChatRoomMessages,
@@ -132,6 +132,8 @@ const resolvers = {
 		createPublicChat: ChatRoomsController.createPublicChat,
 		createPrivateChat: ChatRoomsController.createPrivateChat,
 		addMembersToChatRoom: ChatRoomsController.addMembersToChatRoom,
+		removeMembersFromChatRoom:
+			ChatRoomsController.removeMembersFromChatRoom,
 		updatePublicChatName: ChatRoomsController.updatePublicChatName,
 		createMessage: async (parent: any, args: any, context: any) => {
 			const message = await MessageController.createMessage(

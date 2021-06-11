@@ -33,6 +33,10 @@ class ChatRoomService {
 		return ChatRoomDAO.addMembersToChatRoom(room_id, profileUsernames);
 	}
 
+	removeMembersFromChatRoom(room_id: number, profileUsernames: string[]) {
+		return ChatRoomDAO.removeMembersFromChatRoom(room_id, profileUsernames);
+	}
+
 	getPublicChat(room_id: number) {
 		return ChatRoomDAO.getPublicChat(room_id);
 	}

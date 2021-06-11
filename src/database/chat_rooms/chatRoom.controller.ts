@@ -1,3 +1,4 @@
+import { ApolloError } from "apollo-server-express";
 import { Request, Response } from "express";
 import { processRequestImage } from "../../api/process";
 import ChatRoomService from "./chatRoom.service";
@@ -29,7 +30,22 @@ class ChatRoomController {
 		return chatRoom;
 	}
 
-	async getChatRoom(parent: any, args: any) {
+	async getChatRoom(parent: any, args: any, context: any) {
+		// 0. Check if authorized to access chatRoom
+		const members = await ChatRoomService.getChatRoomMembers(
+			args.room_id || parent.room_id
+		);
+
+		const isAuthorized = members
+			.map((m) => m.username)
+			.includes(context.user.username);
+
+		if (!isAuthorized) {
+			return new ApolloError(
+				"You are not authorized to access this chat"
+			);
+		}
+
 		// 1. Query for chatroom
 		const chatRoom = await ChatRoomService.getChatRoom(
 			args.room_id || parent.room_id
@@ -68,6 +84,19 @@ class ChatRoomController {
 			args.room_id,
 			args.profileUsernames
 		);
+
+		// 2. Return chatRoom
+		return chatRoom;
+	}
+
+	async removeMembersFromChatRoom(parent: any, args: any, context: any) {
+		// 1. Make update query
+		const chatRoom = await ChatRoomService.removeMembersFromChatRoom(
+			args.room_id,
+			args.profileUsernames
+		);
+
+		console.log(chatRoom);
 
 		// 2. Return chatRoom
 		return chatRoom;

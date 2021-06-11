@@ -5,7 +5,6 @@ import resolvers from "./resolvers";
 import { getBaseUrl } from "../util/url";
 import http from "http";
 import { verifyAccessToken } from "../auth/tokens";
-import chatRoomService from "../database/chat_rooms/chatRoom.service";
 
 export const apolloServer = new ApolloServer({
 	typeDefs,
@@ -21,8 +20,7 @@ export const apolloServer = new ApolloServer({
 
 			if (user) {
 				// Get socket username
-				const username = user.username;
-				return { user: { username } };
+				return { user: { username: user.username } };
 			} else {
 				// Return unauthenticated error
 			}

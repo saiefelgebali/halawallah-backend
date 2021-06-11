@@ -155,6 +155,10 @@ const typeDefs = gql`
 			room_id: Int!
 			profileUsernames: [String]!
 		): ChatRoom
+		removeMembersFromChatRoom(
+			room_id: Int!
+			profileUsernames: [String]!
+		): ChatRoom
 		updatePublicChatName(room_id: Int!, name: String!): PublicChat
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean
