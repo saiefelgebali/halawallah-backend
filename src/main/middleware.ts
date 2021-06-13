@@ -1,13 +1,14 @@
-import path from "path";
 import { ConsoleColor, print } from "alamanah-express";
-import express, { RequestHandler } from "express";
+import { RequestHandler } from "express";
 import authentication from "../auth/middleware";
 import { getAbsoluteUrl } from "../util/url";
 import cors from "cors";
 
-// Log HTTP Requests
+// Log HTTP Requests in development
 const logger: RequestHandler = (req, res, next) => {
-	print(getAbsoluteUrl(req), req.method, ConsoleColor.FgBlue);
+	if (process.env.NODE_ENV === "development") {
+		print(getAbsoluteUrl(req), req.method, ConsoleColor.FgBlue);
+	}
 	next();
 };
 

@@ -5,13 +5,23 @@ import knexConfig from "./config";
 let db: Knex;
 
 // By default, Jest will set NODE_ENV to test when running tests
-if (process.env.NODE_ENV) {
+if (process.env.NODE_ENV === "test") {
 	db = knex(knexConfig.test);
 }
 
-// If not testing, assume development environment
-else {
+// Use Development DB
+else if (process.env.NODE_ENV === "development") {
 	db = knex(knexConfig.development);
+}
+
+// Use Production DB
+else if (process.env.NODE_ENV === "production") {
+	db = knex(knexConfig.production);
+}
+
+// Default to development environment
+else {
+	db = knex(knexConfig.production);
 }
 
 export default db;

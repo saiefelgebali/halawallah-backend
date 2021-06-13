@@ -47,10 +47,9 @@ export async function connectApolloServer(app: Application) {
 	 * Start a new ApolloServer instance and connect it to application
 	 */
 
-	await apolloServer.start();
-
-	// Subscriptions endpoint using 'ws' protocol
 	const httpServer = http.createServer(app);
+
+	await apolloServer.start();
 
 	// Use graphql as middleware to express
 	apolloServer.applyMiddleware({ app });
