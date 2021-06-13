@@ -37,14 +37,16 @@ class UserController {
 
 		// Check if username unique constraint is violated
 		else if (user.constraint === "users_username_unique") {
-			return res.json(
-				new Error("A user with that username already exists")
-			);
+			return res
+				.status(400)
+				.json("A user with that username already exists");
 		}
 
 		// Server error occured
 		else {
-			return res.json(new Error("Server could not handle request"));
+			return res
+				.status(500)
+				.send("Could not handle request, please try again later");
 		}
 	}
 }

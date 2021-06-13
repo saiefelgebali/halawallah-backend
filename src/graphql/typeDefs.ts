@@ -159,7 +159,7 @@ const typeDefs = gql`
 			room_id: Int!
 			profileUsernames: [String]!
 		): ChatRoom
-		updatePublicChatName(room_id: Int!, name: String!): PublicChat
+		updatePublicChatName(room_id: Int!, name: String!): ChatRoom
 		createMessage(room_id: Int!, text: String!): Message
 		deleteMessage(message_id: Int!): Boolean
 		startTyping(room_id: Int!): Boolean
