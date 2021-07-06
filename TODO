@@ -9,15 +9,12 @@
 [X] Delete refreshToken - Logout
 [X] Search profiles profile by username & display
 
-[X] Socket.io support // Replaced with subscriptions
+[X] Socket.io support
 [X] Instant messaging
-[X] Add timestamps to comments, posts and format them
-
-[ ] Return 400 status code on invalid login rather than 200 
-
 [ ] Notification system
 [ ] Integrate GraphQL reporting
 [ ] More testing
+[X] Add timestamps to comments, posts and format them
 
 [ ] Google auth setup
 [ ] Apple auth setup
