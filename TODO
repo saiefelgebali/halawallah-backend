@@ -9,12 +9,15 @@
 [X] Delete refreshToken - Logout
 [X] Search profiles profile by username & display
 
-[X] Socket.io support
-[ ] Instant messaging
+[X] Socket.io support // Replaced with subscriptions
+[X] Instant messaging
+[X] Add timestamps to comments, posts and format them
+
+[ ] Return 400 status code on invalid login rather than 200 
+
 [ ] Notification system
 [ ] Integrate GraphQL reporting
 [ ] More testing
-[ ] Add timestamps to comments, posts and format them
 
 [ ] Google auth setup
 [ ] Apple auth setup
@@ -30,4 +33,3 @@
 [ ] Use postgres pubsub library for graphql subscriptions 
     - https://github.com/GraphQLCollege/graphql-postgres-subscriptions
     - https://www.apollographql.com/docs/apollo-server/data/subscriptions/#production-pubsub-libraries
-[ ] Change socket.io cors to appropriate url (Avoid wildcard)
