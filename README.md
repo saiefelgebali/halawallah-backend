@@ -1,11 +1,24 @@
 # Hala Wallah Backend
 
+This is the repository for the backend application of the **Hala** project.
+
+Go to [frontend](https://github.com/saiefelgebali/halawallah-frontend).
+
 ## About This Project
-My goal is to make a social networking website that resembles Instagram and Twitter
+Hala is a mentally, emotionally, and physically sustainable platform, designed to connect friends and family, with no ulterior motive. 
 
-This repository contains the node js backend (Go to [frontend](https://github.com/saiefelgebali/halawallah-frontend))
+I created Hala as an alternative option for those who seek to rid themselves of their addiction to other platforms. 
 
-Here's a link to the live website [halawallah.net](https://halawallah.net) (If your reading this after June 2021, the website is likely going to be down)
+Excessive use of social media has been proven to cause feelings of depression and anxiety.
+This project aims to create a social platform without the features that are known to cause mental health problems. 
+
+Hala fixes some of these problems by
+- Omitting user likes
+- Hiding follower counts
+- No Advertisments
+- Blocking NSFW content
+
+This project is an EPQ (Extended Project Qualification) entry.
 
 ## Tech Stack
 ![React JS Logo](https://files.readme.io/320345b-React_Logo_256x256.png)
